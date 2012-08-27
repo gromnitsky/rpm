@@ -42,7 +42,7 @@ clean:
 	$(MAKE) tree
 
 build: clean
-	rpmbuild $(macros) -ba $(SPEC) $(OPTS) \
+	rpmbuild $(macros) $(dpkg) -ba $(SPEC) $(OPTS) \
 		2>&1 | tee $(LOGS)/all
 
 patch: clean

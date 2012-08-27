@@ -1,4 +1,4 @@
-# Pass --without-x to rpmbuild to compile only vmtoolsd plugins that
+# Pass --without=x to rpmbuild to compile only vmtoolsd plugins that
 # doesn't depend on X11.
 %bcond_without x
 
@@ -48,8 +48,6 @@ composed of user-space programs for Fedora 17+ guest operating systems.
 
 This RPM does not contain kernel & fuse modules.
 Unity support is disabled by upstream.
-
-FAQ: https://github.com/gromnitsky/open-vm-tools-min-fedora
 
 %prep
 %setup -q -n %{upstream_name}-%{upstream_date}-%{upstream_rel}
