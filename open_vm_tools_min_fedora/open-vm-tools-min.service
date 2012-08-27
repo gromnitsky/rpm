@@ -1,0 +1,15 @@
+# -*-conf-*-
+
+[Unit]
+Description=Open VMware tools for VMware guests (a light version)
+Documentation=https://github.com/gromnitsky/open-vm-tools-min-fedora
+After=syslog.target
+ConditionVirtualization=vmware
+
+[Service]
+Type=forking
+PIDFile=/var/run/vmtoolsd.pid
+ExecStart=/usr/bin/vmtoolsd -n vmsvc -b /var/run/vmtoolsd.pid
+
+[Install]
+WantedBy=multi-user.target

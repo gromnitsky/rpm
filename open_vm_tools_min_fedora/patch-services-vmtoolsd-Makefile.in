@@ -1,0 +1,24 @@
+--- services/vmtoolsd/Makefile.in.orig	2012-08-13 23:43:43.383188748 +0300
++++ services/vmtoolsd/Makefile.in	2012-08-13 23:44:59.240191633 +0300
+@@ -734,7 +734,7 @@
+ 
+ info-am:
+ 
+-install-data-am: install-pamSCRIPTS
++install-data-am:
+ 	@$(NORMAL_INSTALL)
+ 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
+ install-dvi: install-dvi-am
+@@ -814,10 +814,10 @@
+ 
+ # Message catalogs.
+ install-data-hook:
+-	@INSTVMSG@ vmtoolsd $(srcdir)/l10n $(DESTDIR)$(datadir)
++
+ 
+ install-exec-hook:
+-	$(INSTALL) -d $(DESTDIR)/etc/vmware-tools
++
+ 
+ uninstall-hook:
+ 	rm -rf $(DESTDIR)/etc/vmware-tools
