@@ -3,8 +3,8 @@
 %bcond_without x
 
 %define upstream_name open-vm-tools
-%define upstream_date 2012.05.21
-%define upstream_rel 724730
+%define upstream_date 2013.04.16
+%define upstream_rel 1098359
 Version: %{upstream_date}+%{upstream_rel}
 Release: 1%{?dist}
 
@@ -19,6 +19,9 @@ Group: Applications/System
 # GPLv2 kernel modules are not included anyway
 License: LGPLv2.1 and BSD
 URL: http://%{upstream_name}.sourceforge.net/
+# Starting Fedora 19 there is an package in their official repo. But we
+# don't like that package!
+Conflicts: %{upstream_name}
 
 Source0: http://downloads.sourceforge.net/%{upstream_name}/%{upstream_name}-%{upstream_date}-%{upstream_rel}.tar.gz
 %define systemd_service %{upstream_name}-min.service
@@ -92,11 +95,11 @@ if [ "$1" = 1 ]; then
 	systemctl start %{systemd_service}
 fi
 %if ! %{without x}
-echo *****************************************************
-echo To copy/paste between host & guest, add to ~/.xinitrc
-echo
-echo vmtoolsd -n vmusr &
-echo *****************************************************
+echo '*****************************************************'
+echo 'To copy/paste between host & guest, add to ~/.xinitrc'
+echo ''
+echo 'vmtoolsd -n vmusr &'
+echo '*****************************************************'
 %endif
 
 %preun

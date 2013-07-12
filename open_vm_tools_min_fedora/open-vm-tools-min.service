@@ -10,6 +10,7 @@ ConditionVirtualization=vmware
 Type=forking
 PIDFile=/var/run/vmtoolsd.pid
 ExecStart=/usr/bin/vmtoolsd -n vmsvc -b /var/run/vmtoolsd.pid
+KillSignal=SIGKILL
 
 [Install]
 WantedBy=multi-user.target
