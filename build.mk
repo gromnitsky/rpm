@@ -31,15 +31,16 @@ endif
 
 all: build
 
-.PHONY: tree clean build patch compile install rpm \
+.PHONY: tree clean-tree clean build patch compile install rpm \
 	spec-check spec-dump download clean-rpm
 
 tree:
 	mkdir -p $(ROOT)/{BUILD,BUILDROOT,RPMS,SRPMS} $(LOGS)
 
-clean:
+clean-tree:
 	rm -rf $(ROOT) $(LOGS)
-	$(MAKE) tree
+
+clean: | clean-tree tree
 
 build: clean
 	rpmbuild $(macros) $(dpkg) -ba $(SPEC) $(OPTS) \
