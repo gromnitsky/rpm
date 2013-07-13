@@ -61,6 +61,9 @@ Unity support is disabled by upstream.
 %patch05
 
 %build
+# Use -Wno-unused-local-typedefs to build with GCC 4.8
+export CFLAGS="$RPM_OPT_FLAGS -Wno-unused-local-typedefs"
+export CXXLAGS="$RPM_OPT_FLAGS -Wno-unused-local-typedefs"
 %configure \
 	%{?_without_x} \
 	--without-icu --without-dnet --without-procps --without-pam \
