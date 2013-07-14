@@ -14,6 +14,4 @@ targets.
 
 __TODO__
 
-* xxkb
-* xoris
 * a light kernel for vmware guests
