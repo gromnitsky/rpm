@@ -10,8 +10,7 @@ Source0: http://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{n
 Source1: xoris-run.sh
 
 BuildRequires: libX11, imake
-# includes 'showrgb' program
-Requires: xorg-x11-server-utils
+Requires: xorg-x11-server-utils, xorg-x11-apps
 
 %description
 See summary.
