@@ -6,7 +6,7 @@
 %define upstream_date 2013.04.16
 %define upstream_rel 1098359
 Version: %{upstream_date}+%{upstream_rel}
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 %if %{without x}
 Name: %{upstream_name}-min-fedora-nox11
@@ -36,8 +36,8 @@ patch05: patch-toolbox-Makefile.in
 AutoReq: no
 
 %if %{without x}
-BuildRequires: glib2-devel
-Requires: glib2 pkgconfig
+BuildRequires: glib2-devel, procps-devel, libdnet-devel
+Requires: glib2, pkgconfig, procps, libdnet
 %else
 BuildRequires: libXinerama-devel, libSM-devel, libXrandr-devel, libXtst-devel
 BuildRequires: gtkmm24-devel
@@ -66,7 +66,7 @@ export CFLAGS="$RPM_OPT_FLAGS -Wno-unused-local-typedefs"
 export CXXLAGS="$RPM_OPT_FLAGS -Wno-unused-local-typedefs"
 %configure \
 	%{?_without_x} \
-	--without-icu --without-dnet --without-procps --without-pam \
+	--without-icu --without-pam \
 	--without-kernel-modules --disable-docs --disable-tests
 make %{?_smp_mflags}
 
