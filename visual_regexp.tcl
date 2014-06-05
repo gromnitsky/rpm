@@ -42,7 +42,7 @@ set version 3.0.1
 #----------------------------------------------------------------------------------------------
 
 # default geometry
-set geometry            1000x600+0+0
+set geometry            1000x600
 # main font used to display the text
 set font_regexp     {Courier 12}
 set font_replace    {Courier 12}
