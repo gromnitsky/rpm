@@ -1,10 +1,10 @@
-#!/bin/sh  
-#-*-tcl-*-  
+#!/bin/sh
+#-*-tcl-*-
 # the next line restarts using wish \
-exec wish8.3 "$0" -- ${1+"$@"}
+exec wish "$0" -- ${1+"$@"}
 
 
-set version 3.0
+set version 3.0.1
 
 ###############################################################################################
 #
@@ -19,19 +19,19 @@ set version 3.0
 #
 #----------------------------------------------------------------------------------------------
 #
-# This program is free software; you can redistribute it and/or modify  
-# it under the terms of the GNU General Public License as published by  
-# the Free Software Foundation; either version 2 of the License, or  
-# (at your option) any later version.  
-#  
-# This program is distributed in the hope that it will be useful,  
-# but WITHOUT ANY WARRANTY; without even the implied warranty of  
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  
-# GNU General Public License for more details.  
-#  
-# You should have received a copy of the GNU General Public License  
-# along with this program; if not, write to the Free Software  
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA  
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
 ###############################################################################################
 
@@ -42,17 +42,11 @@ set version 3.0
 #----------------------------------------------------------------------------------------------
 
 # default geometry
-set geometry            800x600+0+0
+set geometry            1000x600+0+0
 # main font used to display the text
-if {$tcl_platform(platform) == "windows"} {
-	set font_regexp     {Courier 10}
-	set font_replace    {Courier 10}
-	set font_sample     {Courier 10}
-} else {
-	set font_regexp		9x15
-	set font_replace	9x15
-	set font_sample		9x15
-}
+set font_regexp     {Courier 12}
+set font_replace    {Courier 12}
+set font_sample     {Courier 12}
 # the font used in the popup menu (use ---- to get a separator, else format is {font size ?bold?}
 set fonts 				{{Courier 8} {Courier 9} {Courier 10} {Courier 11} {Courier 12}
 						 ----
@@ -63,13 +57,13 @@ set fonts 				{{Courier 8} {Courier 9} {Courier 10} {Courier 11} {Courier 12}
 set colors              {#ff0000 #0000ff darkgreen violetred #ff9000 #537db9 #e4c500     firebrick darkgoldenrod hotpink}
 set bgcolors            {#ffe6e6 #e6e6ff #e6ffe6   #efd5e1   #fef3e5 #d6dce5 lightyellow white    white        white}
 # use background color in sample by default ? (1 use, 0 do not use)
-set background			0
+set background			1
 # background color to visualize the non-reporting group (?:...)
 set color_noreport      #fffdc4
 # background color to visualize the lookhead group (?=...) and (?!...)
 set color_lookahead     wheat
 # show/hide help about control characters in regexp
-set show_help			0
+set show_help			1
 # show/hide history windows on startup
 set history				0
 # mode to use on startup (select/concat = raw, select/insert new lines = nl, replace = replace)
@@ -106,7 +100,6 @@ namespace eval regexp {} {
 proc regexp::gui {} {
 variable data
 global colors bgcolors color_noreport color_lookahead geometry show_help regexp_db history
-global tcl_platform
 
 
 	set top ""
@@ -133,13 +126,8 @@ global tcl_platform
 		set data(w:regexp) [text $w.regexp -wrap char -bg white -font $::font_regexp \
 									-selectbackground lightblue -selectborderwidth 0 \
 									-width 1 -height 3 -bd 1]
-		if {$tcl_platform(platform) == "windows"} {
-			set sfont {Courier 8}
-			set sbfont {Courier 8 bold}
-		} else {
-			set sfont 6x13
-			set sbfont 6x13bold
-		}
+		set sfont {Courier 10}
+		set sbfont {Courier 10 bold}
 		set data(w:help) [text $w.help -font $sfont -bd 0 -height 9 -wrap none -bg [$w cget -bg]]
 		$w.help insert 1.0 "\n\n\n\n\n\n\n\n"
 		$w.help insert 1.0 {\a  alert              \n     newline     \0    char 0       \d [[:digit:]]    \A beginning of the string }
@@ -224,7 +212,7 @@ global tcl_platform
 			set data(v:position) 0
 			# layout
 			pack $f.nb [frame $f.0 -width 15] $f.p $f.n -padx 5 -side left
-		
+
 		# layout
 		grid $w.sample	$w.sy	-sticky news
 		grid $w.sx		x		-sticky news
@@ -485,7 +473,6 @@ variable data
 }
 
 proc regexp::help {} {
-global tcl_platform
 
 	toplevel .help
 	wm title .help "Help"
@@ -493,11 +480,7 @@ global tcl_platform
 	label .help.l -image logo
 	pack .help.l -side top -padx 10 -pady 10
 	# help text
-	if {$tcl_platform(platform) == "windows"} {
-		text .help.t -bd 2 -relief groove -font {Courier 10}
-	} else {
-		text .help.t -bd 2 -relief groove
-	}
+	text .help.t -bd 2 -relief groove -font {Courier 10}
 	pack .help.t -side top -padx 20
 	.help.t tag configure bold -font "[.help.t cget -font] bold"
 	.help.t insert 1.0 "Version:" bold " $::version
@@ -763,7 +746,7 @@ global font
 	wm geometry $w 640x480
 	wm protocol $w WM_DELETE_WINDOW "set regexp::data(v:history) 0; wm withdraw $w"
 
-	# text zone	
+	# text zone
 	set tf [frame $w.t]
 	pack $tf -side top -expand true -fill both
 	set t [text $tf.t -xscrollcommand "$tf.x set" -yscrollcommand "$tf.y set" \
