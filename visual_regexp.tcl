@@ -44,9 +44,9 @@ set version 3.0.1
 # default geometry
 set geometry            1000x600
 # main font used to display the text
-set font_regexp     {Courier 12}
-set font_replace    {Courier 12}
-set font_sample     {Courier 12}
+set font_regexp     {Courier 10}
+set font_replace    {Courier 10}
+set font_sample     {Courier 10}
 # the font used in the popup menu (use ---- to get a separator, else format is {font size ?bold?}
 set fonts 				{{Courier 8} {Courier 9} {Courier 10} {Courier 11} {Courier 12}
 						 ----
@@ -126,8 +126,8 @@ global colors bgcolors color_noreport color_lookahead geometry show_help regexp_
 		set data(w:regexp) [text $w.regexp -wrap char -bg white -font $::font_regexp \
 									-selectbackground lightblue -selectborderwidth 0 \
 									-width 1 -height 3 -bd 1]
-		set sfont {Courier 10}
-		set sbfont {Courier 10 bold}
+		set sfont {Courier 8}
+		set sbfont {Courier 8 bold}
 		set data(w:help) [text $w.help -font $sfont -bd 0 -height 9 -wrap none -bg [$w cget -bg]]
 		$w.help insert 1.0 "\n\n\n\n\n\n\n\n"
 		$w.help insert 1.0 {\a  alert              \n     newline     \0    char 0       \d [[:digit:]]    \A beginning of the string }
@@ -480,7 +480,7 @@ proc regexp::help {} {
 	label .help.l -image logo
 	pack .help.l -side top -padx 10 -pady 10
 	# help text
-	text .help.t -bd 2 -relief groove -font {Courier 10}
+	text .help.t -bd 2 -relief groove -font {Courier 8}
 	pack .help.t -side top -padx 20
 	.help.t tag configure bold -font "[.help.t cget -font] bold"
 	.help.t insert 1.0 "Version:" bold " $::version
