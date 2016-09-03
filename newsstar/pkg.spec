@@ -1,5 +1,5 @@
 Name: newsstar
-Version: 1.5.4
+Version: 1.5.6
 Release: 1%{?dist}
 Summary: Fetches news and posts it to a local NNTP server
 
@@ -49,7 +49,7 @@ cp -a sample_config $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %files
 %{_bindir}/*
-%{_libdir}/%{name}/*
+%{_libexecdir}/%{name}/*
 %{_docdir}/*
 %{_mandir}/*
 %{dir_conf}
@@ -58,7 +58,7 @@ cp -a sample_config $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %post
 chown news:news %{_bindir}/%{name} \
-	%{_libdir}/%{name}/%{name}.bin
+	%{_libexecdir}/%{name}/%{name}.bin
 chown -R news:news %{dir_conf} %{dir_rc} %{dir_incoming}
 
 
