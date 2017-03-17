@@ -34,13 +34,13 @@ all: build
 .PHONY: tree clean-tree clean build patch compile install rpm \
 	spec-check spec-dump download clean-rpm
 
-tree:
+tree: clean-tree
 	mkdir -p $(ROOT)/{BUILD,BUILDROOT,RPMS,SRPMS} $(LOGS)
 
 clean-tree:
 	rm -rf $(ROOT) $(LOGS)
 
-clean: | clean-tree tree
+clean: tree
 
 build: clean
 	rpmbuild $(macros) $(dpkg) -ba $(SPEC) $(OPTS) \
