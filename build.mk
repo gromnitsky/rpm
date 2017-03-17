@@ -1,6 +1,6 @@
 # Requires: rpmdevtools, rpm-build, rpmlint
 #
-# A sequence of targets 'patch' -> 'compile' -> 'install' -> 'rpm' is
+# A sequence of targets 'patch' <- 'compile' <- 'install' <- 'rpm' is
 # equal to 'build' target.
 #
 # Use OPTS variable for additional build options, e.g.:
@@ -11,7 +11,7 @@
 #
 # % make spec-dump OPTS='-D "_without_x --without-x"' | less
 #
-# To create debug rpms pass 'DEBUG=1' to make.
+# To create debug rpms, pass 'DEBUG=1'.
 
 # command line flags
 OPTS :=
@@ -80,8 +80,3 @@ download:
 
 clean-rpm:
 	rm -rf $(ROOT)/*RPMS/*
-
-# Debug. Use 'gmake p-obj' to print $(obj) variable.
-p-%:
-	@echo $* = $($*)
-	@echo $*\'s origin is $(origin $*)
