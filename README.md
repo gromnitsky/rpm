@@ -1,17 +1,20 @@
-This is a small collection of rpm specs for programs that absent in
-Fedora repository.
+A small collection of rpm specs for programs that are missing in the
+Fedora repos.
 
-To build rpms themselves, cd to a specific directory with .spec file &
+To build an rpm, cd to a specific directory with the .spec file &
 type:
 
-	$ make download
-	$ make build
+	$ make -f ../build.mk download
+	$ make -f ../build.mk build
 
 If there were no errors, look into `rpmbuld/RPMS` directory.
 
-Read comments in build.mk file (in the root directory) for other useful
-targets.
+Read comments in `build.mk` file (in the root directory) for other
+useful targets.
 
-__TODO__
+## TODO
 
-* a light kernel for vmware guests
+* apktool
+* tkcon
+* vnu
+* wkhtmltox
