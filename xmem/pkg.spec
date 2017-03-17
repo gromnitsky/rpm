@@ -16,7 +16,7 @@ The XMEM program displays the used amount of memory/swap.
 How to use it: http://www.xteddy.org/xmem.html
 
 %prep
-%setup -n %name-%version
+%setup -q -n %name-%version
 %patch0 -p0
 
 %build
