@@ -5,7 +5,7 @@ To build an rpm, cd to a specific directory with the .spec file &
 type:
 
 	$ make -f ../build.mk download
-	$ make -f ../build.mk build
+	$ make -f ../build.mk
 
 If there were no errors, look into `rpmbuld/RPMS` directory.
 
@@ -15,6 +15,4 @@ useful targets.
 ## TODO
 
 * apktool
-* tkcon
-* vnu
 * wkhtmltox
