@@ -1,9 +1,9 @@
 Summary: Tk regexp visual designer
 Name: visual_regexp
 Version: 3.0.1
-Release: 1
+Release: 2%{?dist}
 License: GPLv2+
-Group: Development/Tools
+URL: http://laurent.riesterer.free.fr/regexp/
 
 Source1: visual_regexp.tcl
 Source2: README
@@ -28,6 +28,3 @@ install -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/tkregexp
 %defattr(-,root,root,-)
 %{_bindir}/*
 %doc README
-
-
-%changelog
