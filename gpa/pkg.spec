@@ -3,7 +3,7 @@ Name: gpa
 Version: 0.9.10
 Release: 1%{?dist}
 License: GPLv3+
-Group: Interface/X
+Group: User Interface/X
 
 URL: https://gnupg.org/software/gpa/index.html
 Source0: ftp://ftp.gnupg.org/gcrypt/gpa//gpa-%{version}.tar.bz2
@@ -30,6 +30,7 @@ to manage the private and public keys.
 %defattr(-,root,root,-)
 %{_bindir}/*
 %{_datadir}/applications/*
+%dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*
 %{_mandir}/*/*
 %{_datadir}/pixmaps/*
