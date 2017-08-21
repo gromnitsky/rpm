@@ -14,5 +14,4 @@ useful targets.
 
 ## TODO
 
-* apktool
 * wkhtmltox
