@@ -1,0 +1,12 @@
+Fix rendering in Emacs Man mode.
+
+--- wmacpi.1.orig	2017-08-22 06:41:56.544977525 +0300
++++ wmacpi.1	2017-08-22 06:42:08.129895108 +0300
+@@ -1,7 +1,6 @@
+ .TH WMACPI 1 "July 13 2007"
+ .SH NAME
+ wmacpi \- Battery status monitor for systems supporting ACPI
+-.SH NAME
+ wmacpi-cli \- Query battery status for systems supporting ACPI
+ .SH SYNOPSIS
+ .B wmacpi
