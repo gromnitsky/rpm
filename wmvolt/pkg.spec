@@ -1,7 +1,7 @@
 Summary: An eye-candy dockapp to monitor Linux ACPI battery status.
 Name: wmvolt
-Version: 0.0.1%{?dist}
-Release: 1
+Version: 0.0.1
+Release: 1%{?dist}
 License: GPLv2+
 URL: https://github.com/gromnitsky/wmvolt
 
