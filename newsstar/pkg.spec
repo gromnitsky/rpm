@@ -1,14 +1,14 @@
 Name: newsstar
 Version: 1.5.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Fetches news and posts it to a local NNTP server
 
 License: GPLv3
 URL: http://%{name}.sourceforge.net/
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 
-BuildRequires: inn, gdbm-devel, ncurses-devel, openssl-devel, xmlto
-Requires: inn
+BuildRequires: inn, gdbm-devel, ncurses-devel, xmlto
+Requires: inn, compat-openssl10
 
 %description
 What makes newsstar special is that it can make multiple simultaneous
@@ -26,6 +26,16 @@ pipeline article requests to make better use of available bandwidth.
 #%define dir_articles %{_localstatedir}/spool/news/articles
 
 %prep
+# download & unpack openssl 1.0x
+%define openssl %{_builddir}/openssl10
+mkdir %{openssl} && pushd %{openssl}
+[ -f compat-openssl10-1.*.rpm -a -f compat-openssl10-devel-1.*.rpm ] || {
+  dnf download compat-openssl10.%{_arch} compat-openssl10-devel.%{_arch}
+  rpm2cpio compat-openssl10-1.*.rpm | cpio -idm
+  rpm2cpio compat-openssl10-devel-1.*.rpm | cpio -idm
+}
+export CFLAGS='-I%{openssl}/usr/include'
+export LDFLAGS='-L%{openssl}/usr/%{_lib}'
 %setup -q
 
 
@@ -34,18 +44,18 @@ pipeline article requests to make better use of available bandwidth.
 	--enable-keyed-log \
 	--with-inn-path=%{_libexecdir}/news \
 	--with-outgoing-dir=%{dir_outgoing} \
-	--disable-chown
+	--disable-chown --enable-ssl
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
 mkdir -p $RPM_BUILD_ROOT%{dir_conf} $RPM_BUILD_ROOT%{dir_rc} \
 	$RPM_BUILD_ROOT%{dir_incoming}
 
 cp -a sample_config $RPM_BUILD_ROOT%{_docdir}/%{name}
+rm %{openssl}/*.rpm
 
 %files
 %{_bindir}/*
