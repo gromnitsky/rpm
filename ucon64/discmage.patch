@@ -1,0 +1,11 @@
+--- src/ucon64_misc.c.orig	2019-01-08 00:44:01.000000000 +0200
++++ src/ucon64_misc.c	2019-01-08 00:49:00.000000000 +0200
+@@ -1227,7 +1227,7 @@
+ #elif   defined __APPLE__                       // Mac OS X actually
+                        PROPERTY_MODE_DIR ("ucon64") "discmage.dylib",
+ #elif   defined __unix__ || defined __BEOS__
+-                       PROPERTY_MODE_DIR ("ucon64") "discmage.so",
++                       "@@_libdir@@/libdiscmage.so",
+ #else
+                        "",
+ #endif
