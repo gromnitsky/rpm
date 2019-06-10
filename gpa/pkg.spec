@@ -1,12 +1,14 @@
+%global commit 1cb82dcfcea46878cad353022c8f537d4c9d879d
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Summary: GPA is a GUI for the GnuPG
 Name: gpa
-Version: 0.9.10
-Release: 1%{?dist}
+Version: 0.11.0
 License: GPLv3+
-Group: User Interface/X
 
 URL: https://gnupg.org/software/gpa/index.html
-Source0: ftp://ftp.gnupg.org/gcrypt/gpa//gpa-%{version}.tar.bz2
+Source0: https://github.com/gpg/gpa/archive/%commit/%name-%shortcommit.tar.gz
+Release: 1.20190513git.%shortcommit%{?dist}
 
 BuildRequires: gtk2-devel, gpgme-devel
 Requires: gtk2, gpgme
@@ -17,7 +19,11 @@ be used to encrypt, decrypt, and sign files, to verify signatures and
 to manage the private and public keys.
 
 %prep
-%setup -q
+%autosetup -n %name-%commit
+aclocal -I m4
+autoheader
+automake --foreign
+autoconf
 
 %build
 %configure --disable-nls
