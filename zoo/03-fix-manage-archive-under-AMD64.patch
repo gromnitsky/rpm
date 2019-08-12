@@ -1,0 +1,88 @@
+From: unknown
+Subject: patch to solve problems managing files under AMD64 and maybe under others 64 archs.
+
+---
+ makefile  |    5 +++++
+ misc.c    |    4 ++++
+ zoodel.c  |    4 ++++
+ zooext.c  |    4 ++++
+ zoopack.c |    4 ++++
+ 5 files changed, 21 insertions(+)
+
+--- a/makefile
++++ b/makefile
+@@ -54,6 +54,7 @@
+ 	@echo "convex:       Convex C200 series"
+ 	@echo "sysv:         System V Release 2 or 3; or SCO Xenix"
+ 	@echo "linux:        Linux"
++	@echo "linux64:      Linux with 64 bit long"
+ 	@echo "scodos:       Cross-compiler under SCO Xenix/UNIX for MS-DOS"
+ 	@echo "xenix286:     Older Xenix/286 (not tested)"
+ 	@echo "xenix68k:     Xenix/68000 (not tested)"
+@@ -99,6 +100,10 @@
+ linux:
+ 	$(MAKE) CC="gcc" CFLAGS="-c $(OPTIM) $(LINTFLAGS) -DLINUX -DANSI_HDRS" $(TARGETS)
+ 
++# Linux64
++linux64:
++	$(MAKE) CC="gcc" CFLAGS="-c $(OPTIM) $(LINTFLAGS) -DLINUX -DLONG64 -DANSI_HDRS" $(TARGETS)
++
+ # ULTRIX 4.1
+ ultrix:
+ 	$(MAKE) CFLAGS="-c $(OPTIM) -DULTRIX" $(TARGETS)
+--- a/misc.c
++++ b/misc.c
+@@ -173,7 +173,11 @@
+ 
+    frd_zooh (header, zoo_file);
+ 
++#ifdef LONG64
++   if ((int)(header->zoo_start + header->zoo_minus) != 0)
++#else
+    if ((header->zoo_start + header->zoo_minus) != 0L)
++#endif
+       prterror ('f', failed_consistency);
+    if (ver_too_high (header))
+       prterror ('f', wrong_version, header->major_ver, header->minor_ver);
+--- a/zoodel.c
++++ b/zoodel.c
+@@ -138,7 +138,11 @@
+    
+    /* read archive header */
+    frd_zooh (&zoo_header, zoo_file);
++#ifdef LONG64
++   if ((int)(zoo_header.zoo_start + zoo_header.zoo_minus) != 0)
++#else
+    if ((zoo_header.zoo_start + zoo_header.zoo_minus) != 0L)
++#endif
+       prterror ('f', failed_consistency);
+    if (ver_too_high (&zoo_header))
+       prterror ('f', wrong_version, zoo_header.major_ver, zoo_header.minor_ver);
+--- a/zooext.c
++++ b/zooext.c
+@@ -164,7 +164,11 @@
+ } else {
+    /* read header */
+    frd_zooh (&zoo_header, zoo_file);
++#ifdef LONG64
++   if ((int)(zoo_header.zoo_start + zoo_header.zoo_minus) != 0) {
++#else
+    if ((zoo_header.zoo_start + zoo_header.zoo_minus) != 0L) {
++#endif
+       prterror ('w', failed_consistency);
+       bad_header++;
+ 		exit_status = 1;
+--- a/zoopack.c
++++ b/zoopack.c
+@@ -140,7 +140,11 @@
+ /* Read the header of the old archive. */
+ frd_zooh(&old_zoo_header, zoo_file);
+ 
++#ifdef LONG64
++if ((int)(old_zoo_header.zoo_start + old_zoo_header.zoo_minus) != 0) {
++#else
+ if ((old_zoo_header.zoo_start + old_zoo_header.zoo_minus) != 0L) {
++#endif
+    prterror ('w', failed_consistency);
+    ++bad_header;                    /* remember for future error message */
+ }

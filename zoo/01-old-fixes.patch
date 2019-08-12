@@ -1,0 +1,588 @@
+From: Unknown source
+Subject: Old fixes, that were made before this package has changed to use dpatch.
+
+Index: zoo-2.10/ar.h
+===================================================================
+--- zoo-2.10.orig/ar.h	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/ar.h	2008-03-22 16:27:19.000000000 -0300
+@@ -7,6 +7,7 @@
+ ***********************************************************/
+ 
+ #include <stdio.h>
++#include <sys/types.h>
+ 
+ #ifdef ANSI_HDRS
+ # include <limits.h>
+@@ -15,9 +16,11 @@
+ /* uchar should be 8 bits or more */
+ /* typedef unsigned char  uchar;   -- already in zoo.h */
+ 
++#ifndef _SYS_TYPES_H
+ typedef unsigned int   uint;    /* 16 bits or more */
+ typedef unsigned short ushort;  /* 16 bits or more */
+ typedef unsigned long  ulong;   /* 32 bits or more */
++#endif
+ 
+ /* T_UINT16 must be #defined in options.h to be 
+ a 16-bit unsigned integer type */
+Index: zoo-2.10/machine.c
+===================================================================
+--- zoo-2.10.orig/machine.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/machine.c	2008-03-22 16:27:19.000000000 -0300
+@@ -48,6 +48,10 @@
+ /* PART 2.  FOR EACH SPECIFIC SYSTEM, INCLUDE A C FILE HERE.           */
+ /***********************************************************************/
+ 
++#ifdef LINUX
++#include "linux.c"
++#endif
++
+ #ifdef SYS_V
+ #include "sysv.c"
+ #endif
+Index: zoo-2.10/makefile
+===================================================================
+--- zoo-2.10.orig/makefile	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/makefile	2008-03-22 16:57:42.000000000 -0300
+@@ -53,6 +53,7 @@
+ 	@echo "ultrix:       ULTRIX 4.1"
+ 	@echo "convex:       Convex C200 series"
+ 	@echo "sysv:         System V Release 2 or 3; or SCO Xenix"
++	@echo "linux:        Linux"
+ 	@echo "scodos:       Cross-compiler under SCO Xenix/UNIX for MS-DOS"
+ 	@echo "xenix286:     Older Xenix/286 (not tested)"
+ 	@echo "xenix68k:     Xenix/68000 (not tested)"
+@@ -94,6 +95,10 @@
+ bsd:
+ 	$(MAKE) CFLAGS="-c $(OPTIM) -DBSD4_3" $(TARGETS)
+ 
++# Linux
++linux:
++	$(MAKE) CC="gcc" CFLAGS="-c $(OPTIM) $(LINTFLAGS) -DLINUX -DANSI_HDRS" $(TARGETS)
++
+ # ULTRIX 4.1
+ ultrix:
+ 	$(MAKE) CFLAGS="-c $(OPTIM) -DULTRIX" $(TARGETS)
+@@ -235,7 +240,11 @@
+ parse.o: zoofns.h zooio.h
+ portable.o: /usr/include/stdio.h assert.h debug.h machine.h options.h
+ portable.o: portable.h various.h zoo.h zoofns.h zooio.h
+-prterror.o: /usr/include/stdio.h /usr/include/varargs.h options.h various.h
++
++# I deleted varags.h dependancy from prterror.o since that is a
++# dependancy covered by a #ifdef, and in Debian's case #undef'ed
++
++prterror.o: /usr/include/stdio.h options.h various.h
+ prterror.o: zoofns.h zooio.h
+ sysv.o: /usr/include/sys/stat.h /usr/include/sys/types.h /usr/include/time.h
+ sysv.o: nixmode.i nixtime.i
+Index: zoo-2.10/makelist.c
+===================================================================
+--- zoo-2.10.orig/makelist.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/makelist.c	2008-03-22 16:27:19.000000000 -0300
+@@ -21,6 +21,8 @@
+ 
+ char *nameptr PARMS((char *));
+ void modpath PARMS((char *));
++int isadir PARMS((ZOOFILE));
++int isfdir PARMS((char *));
+ 
+ /*******************/
+ /*
+Index: zoo-2.10/misc.c
+===================================================================
+--- zoo-2.10.orig/misc.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/misc.c	2008-03-22 16:57:42.000000000 -0300
+@@ -8,6 +8,7 @@
+ Copyright (C) 1986, 1987 Rahul Dhesi -- All rights reserved
+ (C) Copyright 1988 Rahul Dhesi -- All rights reserved
+ */
++#include <signal.h>
+ #include "options.h"
+ /* Miscellaneous functions needed by Zoo but not by Ooz */
+ 
+@@ -201,7 +202,7 @@
+ ZOOFILE zoo_file;
+ {
+ #ifndef NOSIGNAL  
+-   T_SIGNAL (*oldsignal)();
++   T_SIGNAL (*oldsignal)(int);
+    oldsignal = signal (SIGINT, SIG_IGN);
+ #endif
+    if (fwr_dir (direntry, zoo_file) == -1)
+Index: zoo-2.10/misc2.c
+===================================================================
+--- zoo-2.10.orig/misc2.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/misc2.c	2008-03-22 16:27:19.000000000 -0300
+@@ -7,6 +7,10 @@
+ Copyright (C) 1986, 1987 Rahul Dhesi -- All rights reserved
+ (C) Copyright 1988 Rahul Dhesi -- All rights reserved
+ */
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <fcntl.h>
++#include <unistd.h>
+ #include "options.h"
+ /* Miscellaneous routines */
+ #include "portable.h"
+Index: zoo-2.10/nixtime.i
+===================================================================
+--- zoo-2.10.orig/nixtime.i	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/nixtime.i	2008-03-22 16:27:19.000000000 -0300
+@@ -10,6 +10,9 @@
+ 
+                                     -- Rahul Dhesi  1986/12/31
+ */
++#include <sys/types.h>
++#include <time.h>
++#include <utime.h>
+ 
+ struct tm *localtime();
+ 
+@@ -51,9 +54,10 @@
+ {
+ 	long mstonix();
+ 	long gettz();
+-	long utimbuf[2];
+-	utimbuf[0] = utimbuf[1] = gettz() + mstonix (date, time);
+-	return (utime (path, utimbuf));
++        struct utimbuf utbf;
++
++	utbf.actime = utbf.modtime = gettz() + mstonix (date, time);
++	return (utime (path, &utbf));
+ }
+ 
+ /****************
+Index: zoo-2.10/options.h
+===================================================================
+--- zoo-2.10.orig/options.h	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/options.h	2008-03-22 16:27:19.000000000 -0300
+@@ -13,6 +13,32 @@
+ 
+ 
+ /***********************************************************************/
++/* Linux                                                               */
++/***********************************************************************/
++
++#ifdef LINUX
++#define FILTER
++#define IO_MACROS
++#define EXISTS(f)		(access(f, 00) == 0)
++#define FNLIMIT 1023
++#define CHEKDIR
++#define NIXTIME
++#define NIXFNAME
++#define NEEDCTYP
++#define NOENUM
++#define REN_STDC
++#define SETBUF
++#define GETTZ
++#define FATTR
++#define T_SIGNAL        void
++#define STDARG
++#define HAVE_ISATTY          /* undocumented #define option */
++#define ANSI_PROTO
++#define VOIDPTR  void *
++#define NO_STDIO_FN          /* Do we need this? RUARI QUINN */
++#endif /* Linux */
++
++/***********************************************************************/
+ /* SYSTEM V (should be compatible with most releases)                  */
+ /***********************************************************************/
+ 
+Index: zoo-2.10/portable.h
+===================================================================
+--- zoo-2.10.orig/portable.h	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/portable.h	2008-03-22 16:27:19.000000000 -0300
+@@ -90,6 +90,12 @@
+ #define  MKDIR(x)       mkdir(x, 0777)
+ #endif
+ 
++/* Linux */
++#ifdef LINUX
++#define NIX_IO       /* standard **IX I/O */
++#define  MKDIR(x)       mkdir(x, 0777)
++#endif
++
+ /* Amiga */
+ #ifdef MCH_AMIGA
+ # include "MCH_AMIGA NEEDS REVISION"
+Index: zoo-2.10/zoo.1
+===================================================================
+--- zoo-2.10.orig/zoo.1	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zoo.1	2008-03-22 16:27:19.000000000 -0300
+@@ -955,7 +955,7 @@
+     2526: DIR  [changes] ==>   95
+     2587: DATA
+ ****************
+-    3909: DIR  [copyrite] ==> 1478
++    3909: DIR  [copyright] ==> 1478
+     3970: DATA
+     4769: DATA
+ ****************
+@@ -1041,7 +1041,7 @@
+ Matches any sequence of zero or more characters.
+ .PP
+ .TP
+-.B \?
++.B ?
+ Matches any single character.
+ .sp 1
+ Arbitrary combinations of 
+@@ -1466,23 +1466,12 @@
+ .I zoo
+ on all systems.  So far as I can tell, this
+ upward compatibility (all manipulations) and downward
+-compatiblity (ability to extract and list)
++compatibility (ability to extract and list)
+ is maintained by
+ .I zoo
+ versions up to 2.01.  Version 2.1 adds the incompatibility
+ that if high-performance compression is used, earlier
+ versions cannot extract files compressed with version 2.1.
+-This is the only incompatibility that is permissible.
+-You are forbidden, with the force of
+-copyright law, to create from the
+-.I zoo
+-source code any derivative work
+-that violates this compatibility goal,
+-whether knowingly or through negligence.
+-If any violation of this
+-compatibility goal is observed,
+-this should be
+-considered a serious problem and reported to me.
+ .SH CHANGES
+ Here is a list of changes occurring from version 1.50 to
+ version 2.01.  In parentheses is given the version in which each
+@@ -1581,7 +1570,7 @@
+ .TP
+ \-
+ (2.01) Blanks around equal signs in commands given to "make"
+-were removed from the mk* scripts for better compatiblity
++were removed from the mk* scripts for better compatibility
+ with more **IX implementations including Sun's.
+ .TP
+ \-
+Index: zoo-2.10/zoo.c
+===================================================================
+--- zoo-2.10.orig/zoo.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zoo.c	2008-03-22 16:27:19.000000000 -0300
+@@ -15,6 +15,7 @@
+ (C) Copyright 1988 Rahul Dhesi -- All rights reserved
+ (C) Copyright 1991 Rahul Dhesi -- All rights reserved
+ */
++#include <unistd.h>
+ #include "options.h"
+ #include "zooio.h"
+ #include "various.h"
+Index: zoo-2.10/zoo.h
+===================================================================
+--- zoo-2.10.orig/zoo.h	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zoo.h	2008-03-22 16:27:19.000000000 -0300
+@@ -1,5 +1,6 @@
+ /* derived from: zoo.h 2.16 88/01/27 23:21:36 */
+-
++#ifndef ZOO_H
++#define ZOO_H
+ /*
+ The contents of this file are hereby released to the public domain.
+ 
+@@ -240,3 +241,4 @@
+ #define	MAXGEN				0x0f
+ /* version mask to prune down to correct size on large-word machines */
+ #define VER_MASK				0xffff
++#endif
+Index: zoo-2.10/zooadd.c
+===================================================================
+--- zoo-2.10.orig/zooadd.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zooadd.c	2008-03-22 16:27:19.000000000 -0300
+@@ -9,11 +9,13 @@
+ (C) Copyright 1988 Rahul Dhesi -- All rights reserved
+ (C) Copyright 1991 Rahul Dhesi -- All rights reserved
+ */
++#include <unistd.h>
+ #include "options.h"
+ /* Adds files specified in parameter-list to archive zoo_path. */
+ 
+ #define LONGEST	20					/* assumed length of longest filename */
+ #include "zoomem.h"             /* to define MAXADD */
++#undef PORTABLE
+ #include "zoo.h"
+ #include "zooio.h"
+ #include "various.h"
+@@ -37,6 +39,7 @@
+ void copyfields PARMS ((struct direntry *, struct tiny_header *));
+ void storefname PARMS ((struct direntry *, char *, int));
+ char *choosefname PARMS ((struct direntry *));
++int isadir PARMS((ZOOFILE));
+ 
+ extern struct zoo_header zoo_header;
+ 
+@@ -132,7 +135,7 @@
+ 
+ if (zoo_file == NOFILE)
+    prterror ('f', could_not_open, zoo_path);
+-basename(zoo_path, zoo_fname);      /* get basename of archive */
++zoo_basename(zoo_path, zoo_fname);  /* get basename of archive */
+ rootname (zoo_path, zoo_bak);       /* name without extension */
+ strcat (zoo_bak, BACKUP_EXT);       /* name of backup of this archive */
+ 
+@@ -222,7 +225,7 @@
+ 		break;
+ 	}
+ 
+-   basename (this_path, this_fname);   /* get just filename for later */
++   zoo_basename (this_path, this_fname);   /* get just filename for later */
+ 
+    this_file = zooopen(this_path, Z_READ);
+    if (this_file == NOFILE) {
+Index: zoo-2.10/zooadd2.c
+===================================================================
+--- zoo-2.10.orig/zooadd2.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zooadd2.c	2008-03-22 16:27:19.000000000 -0300
+@@ -7,7 +7,9 @@
+ Copyright (C) 1986, 1987 Rahul Dhesi -- All rights reserved
+ (C) Copyright 1988 Rahul Dhesi -- All rights reserved
+ */
++#include <unistd.h>
+ #include "options.h"
++#undef PORTABLE
+ #include "zoo.h"
+ #ifndef	OK_STDIO
+ #include <stdio.h>
+@@ -20,7 +22,7 @@
+ #include "assert.h"
+ #include "debug.h"
+ #include "parse.h"
+-
++int isfdir PARMS((char *));
+ /*
+ Miscellaneous routines to support zooadd().
+ */
+Index: zoo-2.10/zooext.c
+===================================================================
+--- zoo-2.10.orig/zooext.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zooext.c	2008-03-22 16:57:42.000000000 -0300
+@@ -14,7 +14,8 @@
+ /* Extract file from archive.  Extracts files specified in parameter-list
+    from archive zoo_path.  If none specified, extracts all files from
+    archive. */
+-
++#include <unistd.h>
++#include <signal.h>
+ #include "options.h"
+ #include "zoo.h"
+ #include "parse.h"      /* defines struct for parse() */
+@@ -62,7 +63,7 @@
+ char *whichname;                          /* which name to extract */
+ char matchname[PATHSIZE];                 /* for pattern matching only */
+ #ifndef NOSIGNAL
+-T_SIGNAL (*oldsignal)();        /* to save previous SIGINT handler */
++T_SIGNAL (*oldsignal)(int);        /* to save previous SIGINT handler */
+ #endif
+ ZOOFILE zoo_file;                         /* open archive */
+ long next_ptr;                            /* pointer to within archive */
+@@ -626,7 +627,7 @@
+ 
+ /* Ctrl_c() is called if ^C is hit while a file is being extracted.
+    It closes the files, deletes it, and exits. */
+-T_SIGNAL ctrl_c()
++T_SIGNAL ctrl_c(int dummy)
+ {
+ #ifndef NOSIGNAL
+    signal (SIGINT, SIG_IGN);     /* ignore any more */
+Index: zoo-2.10/zoofns.h
+===================================================================
+--- zoo-2.10.orig/zoofns.h	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zoofns.h	2008-03-22 16:27:19.000000000 -0300
+@@ -42,12 +42,12 @@
+ int cfactor PARMS ((long, long));
+ int chname PARMS ((char *, char *));
+ int cmpnum PARMS ((unsigned int, unsigned int, unsigned int, unsigned int));
+-T_SIGNAL ctrl_c PARMS ((void));
++T_SIGNAL ctrl_c PARMS ((int));
+ int exists PARMS ((char *));
+ int getfile PARMS ((ZOOFILE, ZOOFILE, long, int));
+ int getutime PARMS ((char *, unsigned *, unsigned *));
+ int gettime PARMS ((ZOOFILE, unsigned *, unsigned *));
+-T_SIGNAL handle_break PARMS ((void));
++T_SIGNAL handle_break PARMS ((int));
+ 
+ #ifdef USE_ASCII
+ int isupper PARMS ((int));
+@@ -85,7 +85,7 @@
+ void addfname PARMS ((char *, long, unsigned int, unsigned int, 
+ 							unsigned, unsigned));
+ void add_version PARMS ((char *, struct direntry *));
+-void basename PARMS ((char *, char []));
++void zoo_basename PARMS ((char *, char []));
+ void break_off PARMS ((void));
+ void close_file PARMS ((ZOOFILE));
+ void comment PARMS ((char *, char *));
+Index: zoo-2.10/zooio.h
+===================================================================
+--- zoo-2.10.orig/zooio.h	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zooio.h	2008-03-22 16:27:19.000000000 -0300
+@@ -7,6 +7,7 @@
+ 
+ 											-- Rahul Dhesi 1988/01/24
+ */
++#include "zoo.h"
+ #ifndef	OK_STDIO
+ #include <stdio.h>
+ #define	OK_STDIO
+Index: zoo-2.10/zoolist.c
+===================================================================
+--- zoo-2.10.orig/zoolist.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zoolist.c	2008-03-22 16:57:16.000000000 -0300
+@@ -47,6 +47,7 @@
+ int ver_too_high PARMS((struct zoo_header *));
+ int needed PARMS((char *, struct direntry *, struct zoo_header *));
+ void printtz PARMS((int));
++int fputchar PARMS ((int));
+ 
+ void zoolist (argv, option, argc)
+ char **argv, *option;
+@@ -414,7 +415,7 @@
+ 					if (direntry.fattr == 0)
+ 						printf ("--- ");
+ 					else if ((direntry.fattr >> 22) == 1)
+-						printf ("%03o ", direntry.fattr & 0x1ff);
++						printf ("%03lo ", direntry.fattr & 0x1ff);
+ 					else
+ 						printf ("??? ");
+ 				}
+Index: zoo-2.10/zoopack.c
+===================================================================
+--- zoo-2.10.orig/zoopack.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/zoopack.c	2008-03-22 16:57:42.000000000 -0300
+@@ -10,6 +10,7 @@
+ Copyright (C) 1986, 1987 Rahul Dhesi -- All rights reserved
+ (C) Copyright 1988 Rahul Dhesi -- All rights reserved
+ */
++#include <unistd.h>
+ #include "options.h"
+ /* Packs an archive.  The sequence is:
+    1. Copy all files from current archive to new one.
+@@ -171,7 +172,7 @@
+ } else {
+    strcpy (temp_file, xes);
+ }
+-mktemp (temp_file);                    /* ... and make unique */
++mkstemp (temp_file);                    /* ... and make unique */
+ new_file = zoocreate (temp_file);
+ if (new_file == NOFILE)
+    prterror ('f', "Could not create temporary file %s.\n", temp_file);
+@@ -388,7 +389,7 @@
+ 
+ /* handle_break() */
+ /* Sets break_hit to 1 when called */
+-T_SIGNAL handle_break()
++T_SIGNAL handle_break(int dummy)
+ {
+ #ifndef NOSIGNAL
+    signal (SIGINT, SIG_IGN);     /* ignore future control ^Cs for now */
+Index: zoo-2.10/basename.c
+===================================================================
+--- zoo-2.10.orig/basename.c	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/basename.c	2008-03-22 16:27:19.000000000 -0300
+@@ -18,7 +18,7 @@
+ 
+ /* This function strips device/directory information from
+ a pathname and returns just the plain filename */
+-void basename (pathname, fname)
++void zoo_basename (pathname, fname)
+ char *pathname;
+ char fname[];
+ {
+Index: zoo-2.10/fiz.1
+===================================================================
+--- zoo-2.10.orig/fiz.1	2008-03-22 16:16:42.000000000 -0300
++++ zoo-2.10/fiz.1	2008-03-22 16:27:19.000000000 -0300
+@@ -5,7 +5,7 @@
+ .\"
+ .TH FIZ 1 "Jan 31, 1988"
+ .SH NAME
+-fiz \- analyze damaged zoo archive for data revovery
++fiz \- analyze damaged zoo archive for data recovery
+ .SH SYNOPSIS
+ .I fiz
+ .RB archive[ .zoo ]
+Index: zoo-2.10/linux.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ zoo-2.10/linux.c	2008-03-22 16:27:19.000000000 -0300
+@@ -0,0 +1,73 @@
++/* machine.c for Linux. */
++
++/* Basically code stolen from bsd.c, and adjusted for Linux. */
++
++#include <sys/stat.h>
++#include <sys/time.h>
++#include <unistd.h>
++
++/* Function isadir() returns 1 if the supplied handle is a directory,
++ * else it returns 0. */
++
++int isadir (ZOOFILE f)
++{
++  struct stat buffer;           /* buffer to hold file information */
++
++  if (fstat (fileno (f), &buffer) == -1)
++    return (0);                 /* inaccessible -- assume not dir */
++  else
++    {
++      if (buffer.st_mode & S_IFDIR)
++	return (1);
++      else
++	return (0);
++    }
++}
++
++
++/* Standard UNIX-compatible time routines */
++#include "nixtime.i"
++
++/* Standard UNIX-specific file attribute routines */
++#include "nixmode.i"
++
++/* Function gettz() returns the offset from GMT in seconds */
++long gettz()
++{
++#define SEC_IN_DAY      (24L * 60L * 60L)
++#define INV_VALUE       (SEC_IN_DAY + 1L)
++
++  static long retval = INV_VALUE;    /* cache, init to impossible value */
++  struct timeval tp;
++  struct timezone tzp;
++
++  if (retval != INV_VALUE)           /* if have cached value, return it */
++    return retval;
++
++   gettimeofday (&tp, &tzp);
++
++   retval = tzp.tz_minuteswest * 60 - tzp.tz_dsttime * 3600L;
++   return retval;
++}
++
++/* Function fixfname() converts the supplied filename to a syntax
++ * legal for the host system.  It is used during extraction.
++ * Undocumented */
++
++char *fixfname(char *fname)
++{
++  return fname; /* default is no-op */
++}
++
++/* Function zootrunc() truncates the file passed to it.
++ * Undocumented. */
++
++int zootrunc(FILE *f)
++{
++  long seekpos;
++  int fd = fileno(f);
++
++  seekpos = lseek(fd, 0L, SEEK_CUR);
++  if (seekpos >= 0)
++    return ftruncate(fd, seekpos);
++}

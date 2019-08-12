@@ -1,0 +1,14 @@
+From: Jari Aalto <jari.aalto@cante.net>
+Subject: Fix missing format strings
+
+--- a/zooadd.c
++++ b/zooadd.c
+@@ -542,7 +542,7 @@
+          status = getfile (this_file, zoo_file, -1L, 1);
+          if (status != 0) {  /* if III */
+             success = 0;
+-            printf (disk_full);
++            printf ("%s", disk_full);
+             exit_status++;
+          } else {
+             success = 1;

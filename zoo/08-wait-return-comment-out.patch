@@ -1,0 +1,24 @@
+From: From: Jari Aalto <jari.aalto@cante.net>
+Subject: Disable 'hit return to continue' screens
+ The requirement to press RET key are not very confortable. The
+ following patch removed the requirement to press a key to next screen,
+ so that the output can be fed to less(1) etc.
+
+Index: zoo-2.10/zoo.c
+===================================================================
+--- zoo-2.10.orig/zoo.c	2008-03-22 17:27:46.000000000 -0300
++++ zoo-2.10/zoo.c	2008-03-22 17:28:29.000000000 -0300
+@@ -511,6 +511,7 @@
+ 	if (!isatty(fileno(stdout)) || !isatty(fileno(stdin)))
+ 		return;
+ #endif
++#ifdef PAUSE_HELP
+ 	(void) printf("Hit RETURN (or ENTER) key to continue...");
+ 	for ( ; ;) {
+ 		int key; 
+@@ -520,4 +521,5 @@
+ 		if (key == '\n' || key == '\r')
+ 			return;
+ 	}
++#endif
+ }
