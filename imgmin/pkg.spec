@@ -8,9 +8,10 @@ URL: https://github.com/rflynn/imgmin
 %global commit0 3451031f89a7758048f1e136d14b9024f750e398
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/rflynn/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Release: 1.20161211git.%shortcommit0%{?dist}
+Release: 2.20161211git.%shortcommit0%{?dist}
 
 BuildRequires: autoconf
+Requires: ImageMagick-libs
 
 %description
 An automated method for generating optimally-sized JPEG images.
