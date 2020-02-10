@@ -1,82 +1,70 @@
-# Requires: rpmdevtools, rpm-build, rpmlint
+# Requires (Fedora): rpmdevtools, rpm-build, rpmlint
 #
-# A sequence of targets 'patch' <- 'compile' <- 'install' <- 'rpm' is
-# equal to 'build' target.
+# A sequence of targets 'prep ← build ← install ← rpm' is an rough
+# equivalent to 'all' target.
 #
-# Use OPTS variable for additional build options, e.g.:
+# Use 'o' variable for additional options, e.g.:
 #
-# % make target OPTS='--with=foo'
+# $ make o=--with=foo
+# $ make o=--without=bar
 #
-# 'spec-dump' target supports OPTS variable also:
+# 'spec' target supports 'o' variable also:
 #
-# % make spec-dump OPTS='-D "_without_x --without-x"' | less
+# $ make spec o='-D "_without_x --without-x"'
 #
-# To create debug rpms, pass 'DEBUG=1'.
+# For debug rpms, pass 'debug=1'. To preserve BUILDROOT, pass o=--no-clean
 
-# command line flags
-OPTS :=
-DEBUG :=
+# user opts
+o :=
+debug :=
 
-ROOT := $(CURDIR)/rpmbuild
-LOGS := $(CURDIR)/logs
-SRC := $(CURDIR)
-SPEC := $(word 1,$(wildcard *.spec))
+
+
+topdir := $(CURDIR)/_out
+log := $(topdir)/log
+src := $(CURDIR)
+specfile := $(firstword $(wildcard *.spec))
 
 # options for rpmbuild
-macros := -D "_topdir $(ROOT)" -D "_sourcedir $(SRC)" -D "_specdir $(SRC)"
-dpkg :=
-ifndef DEBUG
-dpkg := -D "debug_package %{nil}"
+macros := -D '_topdir $(topdir)' -D '_sourcedir $(src)' -D '_specdir $(src)'
+ifndef debug
+macros += -D 'debug_package %nil'
 endif
 
-all: build
+all: clean                      # rpm & srpm
+	rpmbuild $(macros) -ba $(specfile) $(o) 2>&1 | tee $(log)/all
 
-.PHONY: tree clean-tree clean build patch compile install rpm \
-	spec-check spec-dump download clean-rpm
+.PHONY: clean clean-rpm
+clean:
+	rm -rf $(topdir)
+	@mkdir -p $(log)
+clean-rpm:; rm -rf $(topdir)/*RPMS/*
 
-tree: clean-tree
-	mkdir -p $(ROOT)/{BUILD,BUILDROOT,RPMS,SRPMS} $(LOGS)
+prep: clean
+	rpmbuild $(macros) -bp $(specfile) $(o) 2>&1 | tee $(log)/0.prep
 
-clean-tree:
-	rm -rf $(ROOT) $(LOGS)
+.PHONY: build
+build:
+	rpmbuild $(macros) -bc --short-circuit $(specfile) $(o) 2>&1 | \
+		tee $(log)/1.build
 
-clean: tree
-
-build: clean
-	rpmbuild $(macros) $(dpkg) -ba $(SPEC) $(OPTS) \
-		2>&1 | tee $(LOGS)/all
-
-patch: clean
-	rpmbuild $(macros) -bp $(SPEC) $(OPTS) \
-		2>&1 | tee $(LOGS)/0-patch
-
-compile:
-	rpmbuild $(macros) -bc --short-circuit $(SPEC) $(OPTS) \
-		2>&1 | tee $(LOGS)/1-compile
-
+.PHONY: install
 install:
-	rpmbuild $(macros) $(dpkg) -bi --short-circuit $(SPEC) $(OPTS) \
-		2>&1 | tee $(LOGS)/2-install
+	rpmbuild $(macros) -bi --short-circuit $(specfile) $(o) 2>&1 | \
+		tee $(log)/2.install
 
-rpm: install
-	rpmbuild $(macros) $(dpkg) -bb --short-circuit $(SPEC) $(OPTS) \
-		2>&1 | tee $(LOGS)/3-rpm
+.PHONY: rpm
+rpm:
+	rpmbuild $(macros) -bb --short-circuit $(specfile) $(o) 2>&1 | \
+		tee $(log)/3.rpm
 
-srpm: install
-	rpmbuild $(macros) $(dpkg) -bs --short-circuit $(SPEC) $(OPTS) \
-		2>&1 | tee $(LOGS)/3-srpm
+.PHONY: srpm
+srpm:
+	rpmbuild $(macros) -bs --short-circuit $(specfile) $(o) 2>&1 | \
+		tee $(log)/3.srpm
 
-spec-check:
-	rpmbuild $(macros) --nobuild --nodeps $(SPEC)
-
-spec-lint:
-	rpmlint -v $(SPEC)
-
-spec-dump:
-	rpmspec $(macros) $(OPTS) -P $(SPEC)
-
-download:
-	spectool -g $(SPEC)
-
-clean-rpm:
-	rm -rf $(ROOT)/*RPMS/*
+.PHONY: check lint spec download
+check:; rpmbuild $(macros) --nobuild $(o) $(specfile)
+lint:; rpmlint -v $(specfile)
+spec:; @rpmspec $(macros) $(o) -P $(specfile) | cat -s | sed '/^%changelog/,$$d' | less
+download:; spectool -g $(specfile)

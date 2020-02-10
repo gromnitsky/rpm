@@ -7,7 +7,7 @@ type:
 	$ make -f ../build.mk download
 	$ make -f ../build.mk
 
-If there were no errors, look into `rpmbuld/RPMS` directory.
+If there were no errors, look into `_out/RPMS` directory.
 
 Read comments in `build.mk` file (in the root directory) for other
 useful targets.
