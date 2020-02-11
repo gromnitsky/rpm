@@ -5,11 +5,11 @@ License: GPLv2+
 URL: https://github.com/jwilk/sinntp
 
 # git ls-remote https://github.com/jwilk/sinntp HEAD
-%global commit0 feeeb7768a14d870dff1a870783c8d999b445d6f
+%global commit0 6a7038a072c34901680572c14c6e2459ddb333d1
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/jwilk/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
 
-Release: 1.20190117git.%shortcommit0%{?dist}
+Release: 1.20191219git.%shortcommit0%{?dist}
 
 BuildRequires: python3-devel
 
