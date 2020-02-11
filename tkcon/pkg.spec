@@ -4,14 +4,14 @@
 Summary: Tcl GUI console
 Name: tkcon
 Version: 2.7
-Release: 0.1.pre1%{?dist}
 License: TCL
-Group: Development/Tools
 URL: http://tkcon.sourceforge.net/
 
 # $ cvs -z3 -d:pserver:anonymous@tkcon.cvs.sourceforge.net:/cvsroot/tkcon checkout tkcon
 # $ tar cfz tkcon-`date +%F-%s`.tar.gz tkcon && rm -rf tkcon
 Source0: %{name}-2017-08-19-1503123300.tar.gz
+
+Release: 2.20170819cvs.1503123300%{?dist}
 
 BuildArch: noarch
 BuildRequires: desktop-file-utils, tcllib
@@ -62,7 +62,6 @@ install -D -m644 man/*.5 -t ${RPM_BUILD_ROOT}%{_mandir}/man5
 install -D -m644 man/*.n -t ${RPM_BUILD_ROOT}%{_mandir}/mann
 
 %files
-%defattr(-,root,root,-)
 %{_bindir}/*
 %{my_libdir}
 %{_datadir}/applications/*
