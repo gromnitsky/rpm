@@ -1,6 +1,6 @@
 Name: newsstar
 Version: 1.5.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Fetches news and posts it to a local NNTP server
 
 License: GPLv3
@@ -25,21 +25,22 @@ pipeline article requests to make better use of available bandwidth.
 %define dir_outgoing %{_localstatedir}/spool/news/outgoing
 #%define dir_articles %{_localstatedir}/spool/news/articles
 
+%global openssl %{_builddir}/openssl10
+
 %prep
 # download & unpack openssl 1.0x
-%define openssl %{_builddir}/openssl10
 mkdir %{openssl} && pushd %{openssl}
 [ -f compat-openssl10-1.*.rpm -a -f compat-openssl10-devel-1.*.rpm ] || {
   dnf download compat-openssl10.%{_arch} compat-openssl10-devel.%{_arch}
   rpm2cpio compat-openssl10-1.*.rpm | cpio -idm
   rpm2cpio compat-openssl10-devel-1.*.rpm | cpio -idm
 }
-export CFLAGS='-I%{openssl}/usr/include'
-export LDFLAGS='-L%{openssl}/usr/%{_lib}'
 %setup -q
 
 
 %build
+export CFLAGS='-I%{openssl}/usr/include'
+export LDFLAGS='-L%{openssl}/usr/%{_lib}'
 %configure \
 	--enable-keyed-log \
 	--with-inn-path=%{_libexecdir}/news \
@@ -70,6 +71,3 @@ rm %{openssl}/*.rpm
 chown news:news %{_bindir}/%{name} \
 	%{_libexecdir}/%{name}/%{name}.bin
 chown -R news:news %{dir_conf} %{dir_rc} %{dir_incoming}
-
-
-%changelog
