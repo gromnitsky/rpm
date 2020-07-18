@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Fvwm3
+Comment=An ICCCM-compliant multiple virtual desktop window manager
+Exec=fvwm3
+Terminal=False
+
+[Window Manager]
+SessionManaged=true

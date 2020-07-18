@@ -1,0 +1,18 @@
+From: Adam Goode <agoode@fedoraproject.org>
+Date: Thu, 19 Apr 2012 23:31:41 +0400
+Subject: [PATCH] Use mimeopen instead of EDITOR
+
+
+diff --git a/bin/fvwm-menu-directory.in b/bin/fvwm-menu-directory.in
+index 8e1ff42..038f6b6 100644
+--- a/bin/fvwm-menu-directory.in
++++ b/bin/fvwm-menu-directory.in
+@@ -40,7 +40,7 @@ my $home  = $ENV{'HOME'} || '/tmp';
+ my $dir   = $home;
+ my $xterm = "xterm -e";              # the X terminal program to invoke
+ my $exect = $ENV{'SHELL'} || '/bin/sh';
+-my $execf = $ENV{'EDITOR'} || "vi";  # the command to execute on plain files
++my $execf = "mimeopen -n";  # the command to execute on plain files
+ my $execa = undef;
+ my $commt = undef;
+ my $commf = undef;

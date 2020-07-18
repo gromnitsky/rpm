@@ -1,0 +1,18 @@
+From: =?UTF-8?q?Ville=20Skytt=C3=A4?= <ville.skytta@iki.fi>
+Date: Thu, 19 Apr 2012 23:29:16 +0400
+Subject: [PATCH] Change html viewer to xdg-open
+
+
+diff --git a/bin/fvwm-menu-headlines.in b/bin/fvwm-menu-headlines.in
+index 2a27953..4209b38 100644
+--- a/bin/fvwm-menu-headlines.in
++++ b/bin/fvwm-menu-headlines.in
+@@ -208,7 +208,7 @@ my $site  = undef;
+ my $name  = undef;
+ my $title = undef;
+ my $itemf = '%h\t%[(%Y-%m-%d %H:%M)]';
+-my $execf = q(firefox '%u');
++my $execf = q(xdg-open '%u');
+ my $commf = undef;
+ my $icont = '';
+ my $iconi = '';
