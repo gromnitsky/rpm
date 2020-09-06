@@ -5,15 +5,14 @@ URL: https://github.com/fvwmorg/fvwm3/
 License: GPLv2+
 Conflicts: fvwm fvwm2
 
-%global commit0 0dad2ce1c065c0c8f1a9c0e8f7997f714ec42b6a
+%global commit0 4b6e9097aa43f9f9447e386935bf1d0a3fcf71c0
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.2020717git.%shortcommit0%{?dist}
+Release: 1.2020906git.%shortcommit0%{?dist}
 
 Source1: %name.desktop
 
 # copied from the orig fedora spec
-Patch1: fvwm-0001-Change-html-viewer-to-xdg-open.patch
 Patch2: fvwm-0002-Use-mimeopen-instead-of-EDITOR.patch
 Patch3: fvwm-0003-Increase-number-of-mouse-buttons-supported.patch
 Patch4: fvwm-0004-FvwmPager-be-more-careful-with-window-labels.patch
@@ -40,7 +39,6 @@ consumption, provide a 3D look to window frames, and a virtual desktop.
 
 %prep
 %setup -q -n %name-%commit0
-%patch1 -p1 -b .xdg-open
 %patch2 -p1 -b .mimeopen
 %patch3 -p1 -b .more-mouse-buttons
 %patch4 -p1 -b .fix_pager
