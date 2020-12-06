@@ -1,4 +1,4 @@
-%global commit 1cb82dcfcea46878cad353022c8f537d4c9d879d
+%global commit b40ff3b1f20dec3b14ca72d0af50137e38cd1808
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Summary: GPA is a GUI for the GnuPG
@@ -8,7 +8,7 @@ License: GPLv3+
 
 URL: https://gnupg.org/software/gpa/index.html
 Source0: https://github.com/gpg/gpa/archive/%commit/%name-%shortcommit.tar.gz
-Release: 1.20190513git.%shortcommit%{?dist}
+Release: 1.20201206git.%shortcommit%{?dist}
 
 BuildRequires: gtk2-devel, gpgme-devel
 Requires: gtk2, gpgme
