@@ -67,4 +67,4 @@ srpm:
 check:; rpmbuild $(macros) --nobuild $(o) $(specfile)
 lint:; rpmlint -v $(specfile)
 spec:; @rpmspec $(macros) $(o) -P $(specfile) | cat -s | sed '/^%changelog/,$$d' | less
-download:; spectool -g $(specfile)
+download:; spectool -d '_sourcedir $(src)' -g $(specfile)
