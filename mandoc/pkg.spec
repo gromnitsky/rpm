@@ -5,11 +5,11 @@ Epoch: 100
 License: ISC
 URL: https://mandoc.bsd.lv/
 
-# cvs -d anoncvs@mandoc.bsd.lv:/cvs co mandoc
+# CVS_RSH=ssh cvs -d :ext:anoncvs@mandoc.bsd.lv:/cvs co mandoc
 # tar cfz mandoc-`date +%F-%s`.tar.gz mandoc && rm -rf mandoc
-Source0: %name-2020-08-08-1596901228.tar.gz
+Source0: %name-2021-03-14-1615739269.tar.gz
 
-Release: 1.20200808cvs.1596901228%{?dist}
+Release: 1.20210314cvs.1615739269%{?dist}
 
 BuildRequires: zlib-devel
 
