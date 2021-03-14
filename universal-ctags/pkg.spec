@@ -4,11 +4,12 @@ Version: 0
 License: GPLv2+
 URL: https://github.com/universal-ctags/ctags
 
+# $ git ls-remote https://github.com/universal-ctags/ctags HEAD
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-%global commit0 3671ad7255885a0c8f6ff4979d80c70f201ea411
+%global commit0 0e4c307b305d99ab9f56f7b346da52ad69457768
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/universal-ctags/ctags/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Release: 1.20200502git.%shortcommit0%{?dist}
+Release: 1.20210314git.%shortcommit0%{?dist}
 
 BuildRequires: autoconf, python3-docutils
 BuildRequires: jansson, libxml2, libyaml, libseccomp
@@ -26,7 +27,7 @@ emacs-style TAGS files.
 
 %build
 ./autogen.sh
-%configure --enable-etags --disable-readcmd
+./configure --enable-etags --disable-readcmd --prefix=%_prefix
 %make_build
 
 %install
