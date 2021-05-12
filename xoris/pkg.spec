@@ -1,8 +1,7 @@
 Name: xoris
 Version: 0.1e
-Release: 1%{?dist}
-Summary: Grabs color from the screen & dumps it to stdout
-Group: Applications/Productivity
+Release: 2%{?dist}
+Summary: Grab a color from the screen & print its value to stdout
 License: MIT
 URL: http://sourceforge.net/projects/xoris/
 Source0: http://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{name}-%{version}.tar.gz
@@ -10,7 +9,7 @@ Source0: http://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{n
 Source1: xoris-run.sh
 
 BuildRequires: libX11, imake
-Requires: xorg-x11-server-utils, xorg-x11-apps
+Requires: rgb, xmessage
 
 %description
 See summary.
@@ -25,7 +24,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 %make_install
 install -p %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}
 
@@ -33,6 +31,3 @@ install -p %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}
 %{_bindir}/*
 
 %doc README
-
-
-%changelog
