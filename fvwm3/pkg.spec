@@ -1,3 +1,5 @@
+# requires: `gem install asciidoctor`, golang
+
 Name: fvwm3
 Version: 0
 Summary: An ICCCM-compliant multiple virtual desktop window manager
@@ -6,10 +8,10 @@ License: GPLv2+
 Conflicts: fvwm fvwm2
 
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 8f3692fc6c82a7c88f804c2e83908cf23832c665
+%global commit0 32c9abcc126428dbd81120ea97820fb8dbf66b21
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20210312git.%shortcommit0%{?dist}
+Release: 1.20210510git.%shortcommit0%{?dist}
 
 Source1: %name.desktop
 
@@ -48,7 +50,7 @@ consumption, provide a 3D look to window frames, and a virtual desktop.
 
 %build
 ./autogen.sh
-%configure --enable-mandoc
+%configure --enable-mandoc --enable-golang
 %make_build
 
 %install
