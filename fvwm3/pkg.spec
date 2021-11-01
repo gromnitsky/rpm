@@ -8,7 +8,7 @@ License: GPLv2+
 Conflicts: fvwm fvwm2
 
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 44e384f65ef5bdc9eb550c66b3d94bca9a66804a
+%global commit0 fb481fd024b9969fba0e749d23ddd66afe1e2be4
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
 Release: 1.20210727git.%shortcommit0%{?dist}
@@ -17,7 +17,6 @@ Source1: %name.desktop
 
 # copied from the orig fedora spec
 Patch2: fvwm-0002-Use-mimeopen-instead-of-EDITOR.patch
-Patch3: fvwm-0003-Increase-number-of-mouse-buttons-supported.patch
 
 BuildRequires: autoconf automake
 BuildRequires: cjson-devel libevent-devel libX11-devel libXrandr-devel libXrender-devel libXt-devel
@@ -39,7 +38,6 @@ consumption, provide a 3D look to window frames, and a virtual desktop.
 %prep
 %setup -q -n %name-%commit0
 %patch2 -p1 -b .mimeopen
-%patch3 -p1 -b .more-mouse-buttons
 
 # undo '-Werror=format-security' from /usr/lib/rpm/redhat/macros
 %global _warning_options -Wall
