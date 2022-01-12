@@ -8,10 +8,10 @@ License: GPLv2+
 Conflicts: fvwm fvwm2
 
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 fb481fd024b9969fba0e749d23ddd66afe1e2be4
+%global commit0 e327cc68f2cf19d491ffdc9ae4c7578f38241f30
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20210727git.%shortcommit0%{?dist}
+Release: 1.20220112git.%shortcommit0%{?dist}
 
 Source1: %name.desktop
 
