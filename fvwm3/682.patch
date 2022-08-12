@@ -1,0 +1,23 @@
+From 006b0ab0841b650d42b2c6651377a50ed8f52e4c Mon Sep 17 00:00:00 2001
+From: topcat001 <anindya49@hotmail.com>
+Date: Wed, 3 Aug 2022 14:28:00 -0700
+Subject: [PATCH] Skip rendering emojis in fallback font.
+
+---
+ libs/Fft.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/libs/Fft.c b/libs/Fft.c
+index a8938dcff..e62b9cf16 100644
+--- a/libs/Fft.c
++++ b/libs/Fft.c
+@@ -305,6 +305,9 @@ static void MatchFont(Display *dpy,
+ 
+ 		if (!XftCharExists(dpy, font, sp.ucs4)) {
+ 			/* Fallback */
++			/* Skip emojis. */
++			if (codelen == 4)
++				continue;
+ 			if (!template) {
+ 				int slant = 0, weight = 0;
+ 				double font_size = 0.0;

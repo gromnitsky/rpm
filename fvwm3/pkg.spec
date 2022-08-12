@@ -8,13 +8,14 @@ License: GPLv2+
 Conflicts: fvwm fvwm2
 
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 c7b41a03e8787b0a62b8f580d201113529aa0abc
+%global commit0 cee5f756c7a7fdf8b6bea9c84f503a9e6c92a679
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20220709git.%shortcommit0%{?dist}
+Release: 1.20220812git.%shortcommit0%{?dist}
 
 Source1: %name.desktop
 
+patch1: 682.patch
 # copied from the orig fedora spec
 Patch2: fvwm-0002-Use-mimeopen-instead-of-EDITOR.patch
 
@@ -37,6 +38,7 @@ consumption, provide a 3D look to window frames, and a virtual desktop.
 
 %prep
 %setup -q -n %name-%commit0
+%patch1 -p1 -b .emojis-in-font
 %patch2 -p1 -b .mimeopen
 
 # undo '-Werror=format-security' from /usr/lib/rpm/redhat/macros
@@ -44,7 +46,7 @@ consumption, provide a 3D look to window frames, and a virtual desktop.
 
 %build
 ./autogen.sh
-%configure --enable-mandoc --enable-golang
+%configure --enable-mandoc --enable-golang --disable-nls
 %make_build
 
 %install
