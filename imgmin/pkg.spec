@@ -13,11 +13,14 @@ Release: 2.20161211git.%shortcommit0%{?dist}
 BuildRequires: autoconf
 Requires: ImageMagick-libs
 
+patch0: src::imgmin.c.patch
+
 %description
 An automated method for generating optimally-sized JPEG images.
 
 %prep
 %setup -q -n %{name}-%{commit0}
+%patch 0 -p1 -b .imagemagick-v7
 
 %build
 autoreconf -fi

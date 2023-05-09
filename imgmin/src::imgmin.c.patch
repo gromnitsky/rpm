@@ -1,0 +1,26 @@
+diff --git a/src/imgmin.c b/src/imgmin.c
+index 5121382..28a36cc 100644
+--- a/src/imgmin.c
++++ b/src/imgmin.c
+@@ -140,16 +140,16 @@ static const char * type2str(const ImageType t)
+            t == UndefinedType            ? "Undefined"            :
+            t == BilevelType              ? "Bilevel"              :
+            t == GrayscaleType            ? "Grayscale"            :
+-           t == GrayscaleMatteType       ? "GrayscaleMatte"       :
++           t == GrayscaleAlphaType       ? "GrayscaleMatte"       :
+            t == PaletteType              ? "Palette"              :
+-           t == PaletteMatteType         ? "PaletteMatte"         :
++           t == PaletteAlphaType         ? "PaletteMatte"         :
+            t == TrueColorType            ? "TrueColor"            :
+-           t == TrueColorMatteType       ? "TrueColorMatte"       :
++           t == TrueColorAlphaType       ? "TrueColorMatte"       :
+            t == ColorSeparationType      ? "ColorSeparation"      :
+-           t == ColorSeparationMatteType ? "ColorSeparationMatte" :
++           t == ColorSeparationAlphaType ? "ColorSeparationMatte" :
+            t == OptimizeType             ? "Optimize"             :
+ #if MagickLibVersion >= 0x630 /* FIXME: available in 0x660, not available in 0x628, not sure which version it was introduced in */
+-           t == PaletteBilevelMatteType  ? "PaletteBilevelMatte"  :
++           t == PaletteBilevelAlphaType  ? "PaletteBilevelMatte"  :
+ #endif
+            "???";
+ }
