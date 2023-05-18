@@ -26,7 +26,7 @@ src := $(CURDIR)
 specfile := $(firstword $(wildcard *.spec))
 
 # options for rpmbuild
-macros := -D '_topdir $(topdir)' -D '_sourcedir $(src)' -D '_specdir $(src)'
+macros := -D '_topdir $(topdir)' -D '_sourcedir $(src)' -D '_specdir $(src)' -D 'source_date_epoch_from_changelog 0'
 ifndef debug
 macros += -D 'debug_package %nil'
 endif
