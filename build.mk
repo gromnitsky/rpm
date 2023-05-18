@@ -12,7 +12,7 @@
 #
 # $ make spec o='-D "_without_x --without-x"'
 #
-# For debug rpms, pass 'debug=1'. To preserve BUILDROOT, pass o=--no-clean
+# For debug rpms, pass 'debug=1'. To preserve BUILDROOT, pass o=--noclean
 
 # user opts
 o :=
