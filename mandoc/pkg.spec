@@ -9,7 +9,7 @@ URL: https://mandoc.bsd.lv/
 # tar cfz mandoc-`date +%F-%s`.tar.gz mandoc && rm -rf mandoc
 Source0: %name-2021-03-14-1615739269.tar.gz
 
-Release: 1.20210314cvs.1615739269%{?dist}
+Release: 1.20230709cvs.1688916167%{?dist}
 
 BuildRequires: zlib-devel
 
