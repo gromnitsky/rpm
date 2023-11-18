@@ -9,7 +9,7 @@ URL: https://mandoc.bsd.lv/
 # tar cfz mandoc-`date +%F-%s`.tar.gz mandoc && rm -rf mandoc
 Source0: %name-2023-11-18-1700293364.tar.gz
 
-Release: 1.20231118cvs.1700293364%{?dist}
+Release: 2.20231118cvs.1700293364%{?dist}
 
 BuildRequires: zlib-devel
 
@@ -24,13 +24,16 @@ terminals, HTML 5, PostScript, and PDF.
 %setup -q -n %{name}
 
 %build
+echo PREFIX=/usr > configure.local
 ./configure
-make
+%make_build
 
 %install
+#make install DESTDIR=$RPM_BUILD_ROOT
 install -D mandoc demandoc -t $RPM_BUILD_ROOT/%_bindir/
 install -D -m644 mandoc.1 demandoc.1 -t $RPM_BUILD_ROOT/%_mandir/man1/
+install -D -m644 mandoc.css -t $RPM_BUILD_ROOT/%_datadir/misc/
 
 %files
 %_bindir/*
-%_mandir/*
+%_datadir/*
