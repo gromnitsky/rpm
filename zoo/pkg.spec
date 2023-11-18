@@ -1,6 +1,6 @@
 Name:    zoo
 Version: 2.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Summary: File archiving utility with compression
 Source0: http://www.ibiblio.org/pub/packages/ccic/software/unix/utils/zoo210.tar.gz
@@ -39,6 +39,7 @@ the comp.sources.misc.
 %patch14 -p1 -b.orig
 
 %build
+unset LDFLAGS
 %make_build linux
 
 %install
