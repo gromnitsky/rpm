@@ -5,21 +5,23 @@
 
 Summary: CLI utilities for archiving photos
 Name: jpeg-archive
-Version: 2.2.0
+Version: 0
 License: MIT
 URL: https://github.com/danielgtaylor/jpeg-archive
 
 # https://fedoraproject.org/wiki/Packaging:SourceURL
-%global commit0 397fa1e9ed688d919e5257c47a31ef69dffa8baf
+# git ls-remote https://github.com/danielgtaylor/jpeg-archive HEAD
+%global commit0 5b56afa11872fc4b9f68c5a3dcf2ec5afe869504
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/danielgtaylor/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Release: 2.20191228git.%shortcommit0%{?dist}
+Release: 1.20231118git.%shortcommit0%{?dist}
 
-%global commit1 bbb7550709d396aae66d5ea5fad5ef06b1ec7f59
+# git ls-remote https://github.com/mozilla/mozjpeg HEAD
+%global commit1 6c9f0897afa1c2738d7222a0a9ab49e8b536a267
 %global shortcommit1 %(c=%{commit1}; echo ${c:0:7})
 Source1: https://github.com/mozilla/mozjpeg/archive/%{commit1}.tar.gz#/mozjpeg-%{shortcommit1}.tar.gz
 
-BuildRequires: cmake, nasm
+BuildRequires: cmake, nasm, libpng-static
 Requires: parallel, dcraw, perl-Image-ExifTool
 
 %global mozjpeg $RPM_BUILD_DIR/%name-%version/mozjpeg-install
@@ -34,17 +36,17 @@ Uses MozJPEG encoder.
 %setup -q -D -T -a 1
 
 mkdir mozjpeg-build && cd mozjpeg-build
-cmake -G"Unix Makefiles" -DWITH_JPEG8=1 -DPNG_SUPPORTED=0 \
-      -DCMAKE_INSTALL_PREFIX=%mozjpeg ../mozjpeg-%commit1
+cmake -G"Unix Makefiles" -DCMAKE_INSTALL_PREFIX=%mozjpeg ../mozjpeg-%commit1
 make install
 
 %build
 cd %name-%commit0
-%make_build MOZJPEG_PREFIX=%mozjpeg
+unset LDFLAGS
+CFLAGS=-fcommon %make_build MOZJPEG_PREFIX=%mozjpeg
 
 %install
 cd %name-%commit0
-make install PREFIX=%{buildroot}%{_prefix}
+%make_install PREFIX=%{buildroot}%{_prefix}
 
 %files
 %{_bindir}/*
