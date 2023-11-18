@@ -1,6 +1,6 @@
 Summary: A tool for reverse engineering Android apk files
 Name: apktool
-Version: 2.4.1
+Version: 2.9.0
 Release: 1%{?dist}
 License: ASL 2.0
 
