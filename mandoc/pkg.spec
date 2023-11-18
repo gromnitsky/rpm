@@ -7,9 +7,9 @@ URL: https://mandoc.bsd.lv/
 
 # CVS_RSH=ssh cvs -d :ext:anoncvs@mandoc.bsd.lv:/cvs co mandoc
 # tar cfz mandoc-`date +%F-%s`.tar.gz mandoc && rm -rf mandoc
-Source0: %name-2021-03-14-1615739269.tar.gz
+Source0: %name-2023-11-18-1700293364.tar.gz
 
-Release: 1.20230709cvs.1688916167%{?dist}
+Release: 1.20231118cvs.1700293364%{?dist}
 
 BuildRequires: zlib-devel
 
