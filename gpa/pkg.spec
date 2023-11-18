@@ -1,17 +1,17 @@
-%global commit b40ff3b1f20dec3b14ca72d0af50137e38cd1808
+%global commit 12b102444d84f87b6a8556cc39b6d0859bd77179
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Summary: GPA is a GUI for the GnuPG
 Name: gpa
-Version: 0.11.0
+Version: 0
 License: GPLv3+
 
 URL: https://gnupg.org/software/gpa/index.html
 Source0: https://github.com/gpg/gpa/archive/%commit/%name-%shortcommit.tar.gz
-Release: 1.20201206git.%shortcommit%{?dist}
+Release: 1.20231118git.%shortcommit%{?dist}
 
-BuildRequires: gtk2-devel, gpgme-devel
-Requires: gtk2, gpgme
+BuildRequires: gtk3-devel, gpgme-devel
+Requires: gtk3, gpgme
 
 %description
 GPA is a graphical frontend for the GNU Privacy Guard (GnuPG). GPA can
@@ -33,10 +33,5 @@ autoconf
 %make_install
 
 %files
-%defattr(-,root,root,-)
-%{_bindir}/*
-%{_datadir}/applications/*
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/*
-%{_mandir}/*/*
-%{_datadir}/pixmaps/*
+%_bindir/*
+%_datadir/*
