@@ -1,15 +1,15 @@
 Summary: A tiny, non-interactive NNTP client
 Name: sinntp
-Version: 1.6.1
+Version: 0
 License: GPLv2+
 URL: https://github.com/jwilk/sinntp
 
 # git ls-remote https://github.com/jwilk/sinntp HEAD
-%global commit0 867da5ef0cb6d7f6127379d3e6f11bb38e49b192
+%global commit0 0cb80f6bdb425d2605ec4829fb7d3547d476523d
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/jwilk/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
 
-Release: 1.20201030git.%shortcommit0%{?dist}
+Release: 1.20231118git.%shortcommit0%{?dist}
 
 BuildRequires: python3-devel
 
