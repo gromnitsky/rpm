@@ -1,11 +1,14 @@
 Name: grap
-Version: 1.45
-Release: 1%{?dist}
+Version: 0
 Summary: A language for typesetting graphs
-
 License: BSD
 URL: http://www.lunabase.org/~faber/Vault/software/%{name}/
-Source0: http://www.lunabase.org/~faber/Vault/software/%{name}/%{name}-%{version}.tar.gz
+
+# git ls-remote https://github.com/snorerot13/grap HEAD
+%global commit0 814f2b4083130109b0183ab4f1fcc3270c4efb86
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+Source0: https://github.com/snorerot13/grap/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
+Release: 1.20231118git.%shortcommit0%{?dist}
 
 BuildRequires: bison, flex
 
@@ -20,7 +23,11 @@ use grap. For sure, TeX and groff can use it.
 Original tutorial: http://www.kohala.com/start/troff/cstr114.ps
 
 %prep
-%setup -q
+%setup -q -n %name-%commit0
+aclocal
+autoheader
+automake --add-missing
+autoconf
 
 %build
 %configure --with-example-dir=%{_docdir}/%{name}/examples
