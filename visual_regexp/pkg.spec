@@ -1,15 +1,18 @@
-Summary: Tk regexp visual designer
-Name: visual_regexp
-Version: 3.0.1
-Release: 2%{?dist}
+Summary: Graphical front-end to write/debug regular expressions
+Name: visual-regexp
+Version: 3.1
+Release: 1%{?dist}
 License: GPLv2+
 URL: http://laurent.riesterer.free.fr/regexp/
 
-Source1: visual_regexp.tcl
-Source2: README
+Source0: http://laurent.riesterer.free.fr/regexp/visual_regexp-3.1.tcl
+Source1: tkregexp.desktop
+
+patch1: font.patch
 
 BuildArch: noarch
-Requires: tk
+Requires: tk, tcl-tclvfs
+BuildRequires: dos2unix
 
 %description
 VisualREGEXP helps you to design, debug or more generally work with regular
@@ -19,12 +22,14 @@ choose.
 
 %prep
 %setup -Tc
-cp %{SOURCE2} .
+cp %{SOURCE0} .
+%patch -P 1 -p0 -b .font
+dos2unix visual_regexp-3.1.tcl
 
 %install
-install -D %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}/tkregexp
+install -D visual_regexp-3.1.tcl -m0755 %buildroot/%_bindir/tkregexp
+install -D -m0644 %{SOURCE1} -t %buildroot/%_datadir/applications/
 
 %files
-%defattr(-,root,root,-)
-%{_bindir}/*
-%doc README
+%_bindir/*
+%_datadir/*

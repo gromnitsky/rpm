@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=visual-regexp
+GenericName=VisualREGEXP
+Comment=Graphical front-end to write/debug regular expressions
+Exec=tkregexp
+Icon=tkregexp
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=Development;
+Keywords=construction;debug;expression;regex;regexp;regular;tcl;visual;
