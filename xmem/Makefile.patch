@@ -1,21 +1,22 @@
---- Makefile.orig	2014-09-30 00:59:18.433689756 +0300
-+++ Makefile	2014-09-30 01:02:14.782425602 +0300
-@@ -1,5 +1,8 @@
+--- Makefile.orig	2023-11-22 10:57:43.135944300 +0200
++++ Makefile	2023-11-22 11:00:28.674074541 +0200
+@@ -1,5 +1,9 @@
 +APP_DEFAULTS := /usr/share/X11/app-defaults
-+DESTDIR ?=
++CFLAGS := -I./procps-3.3.17/1/include
++LDFLAGS := -L./procps-3.3.17/1/lib -lX11 -lXt -lXaw -lXmu -l:libprocps.a
 +
  xmem: xmem.o get_mem.o MemStripChart.o
 -	gcc $(CFLAGS) -o xmem xmem.o get_mem.o MemStripChart.o -L/usr/X11R6/lib -lX11 -lXt -lXaw -lproc 
-+	gcc $(CFLAGS) -o xmem xmem.o get_mem.o MemStripChart.o -L/usr/X11R6/lib -lX11 -lXt -lXaw -lprocps -lXmu
++	gcc $(CFLAGS) -o xmem xmem.o get_mem.o MemStripChart.o $(LDFLAGS)
  
  xmem.o: xmem.c
  	gcc $(CFLAGS) -c xmem.c
-@@ -15,6 +18,6 @@
+@@ -15,6 +19,6 @@
  
  install: xmem
  	install -d -m 755 $(DESTDIR)/usr/bin/
 -	install -d -m 755 $(DESTDIR)/etc/X11/app-defaults/
-+	install -d -m 755 $(DESTDIR)/$(APP_DEFAULTS)/
++	install -d -m 755 $(DESTDIR)/$(APP_DEFAULTS)
  	install -m 755 xmem $(DESTDIR)/usr/bin/
 -	install -m 644 XMem.ad $(DESTDIR)/etc/X11/app-defaults/XMem
 +	install -p -m 644 XMem.ad $(DESTDIR)/$(APP_DEFAULTS)/XMem
