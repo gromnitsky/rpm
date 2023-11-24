@@ -20,8 +20,7 @@ How to use it: http://www.xteddy.org/xmem.html
 %setup -q -n %name-%version
 %patch 0 -p0
 
-cp %{SOURCE1} .
-tar xf procps-ng-3.3.17.tar.xz
+tar xf %{SOURCE1}
 cd procps-3.3.17
 ./configure --prefix=`pwd`/1
 make install
