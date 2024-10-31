@@ -1,0 +1,25 @@
+--- randtest.c.orig	2022-02-20 15:56:27.000000000 +0200
++++ randtest.c	2024-10-31 01:56:27.177264223 +0200
+@@ -12,20 +12,14 @@
+ #define FALSE 0
+ #define TRUE  1
+ 
+-#define log2of10 3.32192809488736234787
+-
+ static int binary = FALSE;         /* Treat input as a bitstream */
+ 
+-static long ccount[256],           /* Bins to count occurrences of values */
++static unsigned long long ccount[256],           /* Bins to count occurrences of values */
+             totalc = 0;            /* Total bytes counted */
+ static double prob[256];           /* Probabilities per bin for entropy */
+ 
+ /*  RT_LOG2  --  Calculate log to the base 2  */
+-
+-static double rt_log2(double x)
+-{
+-    return log2of10 * log10(x);
+-}
++#define rt_log2 log2
+ 
+ #define MONTEN  6                     /* Bytes used as Monte Carlo
+                                          co-ordinates.  This should be no more
