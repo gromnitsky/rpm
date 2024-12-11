@@ -8,10 +8,10 @@ License: GPLv2+
 Conflicts: fvwm fvwm2
 
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 c71b01711fb1d50b407b7f267d4cea68cc209acc
+%global commit0 a6119f4ca6ad608496b74f0550e3a8304175ae3a
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20240823git.%shortcommit0%{?dist}
+Release: 1.20241211git.%shortcommit0%{?dist}
 
 Source1: %name.desktop
 
@@ -19,8 +19,9 @@ patch1: 682.patch
 # copied from the orig fedora spec
 Patch2: fvwm-0002-Use-mimeopen-instead-of-EDITOR.patch
 
-BuildRequires: autoconf automake
-BuildRequires: cjson-devel libevent-devel libX11-devel libXrandr-devel libXrender-devel libXt-devel
+# FIXME: uncomment this after upgrade to Fedora 41
+#BuildRequires: meson
+BuildRequires: cjson-devel libevent-devel libX11-devel libXrandr-devel libXrender-devel libXt-devel xorg-x11-xtrans-devel
 
 # 'opt', but required also
 BuildRequires: fontconfig-devel freetype-devel fribidi-devel libpng-devel readline-devel libSM-devel libXcursor-devel libXext-devel libXi-devel libXpm-devel imlib2-devel librsvg2-devel
@@ -45,12 +46,11 @@ consumption, provide a 3D look to window frames, and a virtual desktop.
 %global _warning_options -Wall
 
 %build
-./autogen.sh
-%configure --enable-mandoc --enable-golang --disable-nls
-%make_build
+meson setup -Dmandoc=true -Dnls=disabled -Dgolang=enabled -Dprefix=/usr build
+ninja -C build
 
 %install
-%make_install
+DESTDIR=$RPM_BUILD_ROOT ninja -C build install
 install -D -m0644 -p %SOURCE1 %buildroot/%_datadir/xsessions/%name.desktop
 
 %files
