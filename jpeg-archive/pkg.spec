@@ -14,14 +14,14 @@ URL: https://github.com/danielgtaylor/jpeg-archive
 %global commit0 5b56afa11872fc4b9f68c5a3dcf2ec5afe869504
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/danielgtaylor/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
-Release: 1.20231118git.%shortcommit0%{?dist}
+Release: 2.20231118git.%shortcommit0%{?dist}
 
 # git ls-remote https://github.com/mozilla/mozjpeg HEAD
 %global commit1 6c9f0897afa1c2738d7222a0a9ab49e8b536a267
 %global shortcommit1 %(c=%{commit1}; echo ${c:0:7})
 Source1: https://github.com/mozilla/mozjpeg/archive/%{commit1}.tar.gz#/mozjpeg-%{shortcommit1}.tar.gz
 
-BuildRequires: cmake, nasm, libpng-static
+BuildRequires: cmake nasm libpng-static zlib-ng-compat-static
 Requires: parallel, dcraw, perl-Image-ExifTool
 
 %global mozjpeg $RPM_BUILD_DIR/%name-%version/mozjpeg-install
