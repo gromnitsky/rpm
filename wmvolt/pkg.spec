@@ -1,14 +1,14 @@
 Summary: An eye-candy dockapp to monitor Linux ACPI battery status.
 Name: wmvolt
-Version: 0.0.2
-Release: 1%{?dist}
+Version: 0
 License: GPLv2+
 URL: https://github.com/gromnitsky/wmvolt
 
-# https://fedoraproject.org/wiki/Packaging:SourceURL
-%global commit0 a8796635c658e46cfc2d4346a8432ae0de6b6977
+# git ls-remote https://github.com/gromnitsky/wmvolt HEAD
+%global commit0 9263517a5ead62fa2eed1438654f3739dce765e2
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/gromnitsky/%{name}/archive/%{commit0}.tar.gz#/%{name}-%{shortcommit0}.tar.gz
+Release: 1.20241212git.%shortcommit0%{?dist}
 
 BuildRequires: libXext-devel libXpm-devel asciidoc
 
