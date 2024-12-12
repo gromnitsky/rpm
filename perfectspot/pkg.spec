@@ -1,6 +1,6 @@
 Name: perfectspot
 Version: 0.2.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: A graphical viewer for WordPerfect Graphics (WPG) files
 
 License: GPLv2
@@ -17,9 +17,11 @@ Supports vector & raster WPG variants, export to svg/pdf/jpg/odg/bmp.
 
 %build
 %cmake .
+cd redhat-linux-build
 %make_build
 
 %install
+cd redhat-linux-build
 %make_install
 
 %files
