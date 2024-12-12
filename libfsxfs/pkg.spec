@@ -1,5 +1,5 @@
 Name: libfsxfs
-Version: 20231124
+Version: 20240501
 Release: 1
 Summary: Library to support the X File System (XFS) format
 License: LGPL-3.0-or-later
