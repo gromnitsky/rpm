@@ -31,6 +31,8 @@ ifndef debug
 macros += -D 'debug_package %nil'
 endif
 
+SHELL := bash -o pipefail
+
 all: clean                      # rpm & srpm
 	rpmbuild $(macros) -ba $(specfile) $(o) 2>&1 | tee $(log)/all
 
