@@ -1,0 +1,52 @@
+Description: fix memory-leaks reported by Clang's static analyser.
+Author: Jeremy Sowden <jeremy@azazel.net>
+Last-Updated: 2020-05-16
+
+--- a/src/main.c
++++ b/src/main.c
+@@ -630,14 +630,19 @@
+         {"Month_PosY",     T_INT,  &style.oposy, &default_style.oposy},
+         {NULL,             T_STRING, NULL}
+     };
+-    char *partsfile   = xstrdup(style.parts_s);
+-    char *lettersfile = xstrdup(style.letters_s);
+-    char *itimefile   = xstrdup(style.itime_s);
+-    char *btimefile   = xstrdup(style.btime_s);
++    char *partsfile;
++    char *lettersfile;
++    char *itimefile;
++    char *btimefile;
+     char *filename;
+ 
+     if (! stylename) return;
+-    filename = set_filename(stylename, ".mwcs");
++
++    partsfile   = xstrdup(style.parts_s);
++    lettersfile = xstrdup(style.letters_s);
++    itimefile   = xstrdup(style.itime_s);
++    btimefile   = xstrdup(style.btime_s);
++    filename    = set_filename(stylename, ".mwcs");
+ 
+     /* main style */
+     load_stylepart(filename, main_style_opts);
+--- a/wmclockmon-config/tools.c
++++ b/wmclockmon-config/tools.c
+@@ -36,8 +36,8 @@
+     Alarm *lst = *list;
+     int    ok  = TRUE;
+     char  *time = NULL, *date = NULL, *ison = NULL, *mesg = NULL, *at;
+-    char  *tokstr = xstrdup(value);
+-    char  *toksav = tokstr;
++    char  *tokstr;
++    char  *toksav;
+ 
+     if (! value) return;
+     if (! lst) {
+@@ -53,6 +53,7 @@
+         lst->next = xmalloc(sizeof(Alarm));
+         lst = lst->next;
+     }
++    toksav = tokstr = xstrdup(value);
+     at = strchr(value, '@');
+     if (at) ison = strtok(tokstr, "@");
+     time = strtok(at ? NULL : tokstr, "-.");

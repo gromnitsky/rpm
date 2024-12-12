@@ -1,0 +1,93 @@
+Description: Check whether memory has been allocated before freeing.
+ Two strings, command and light_color, were always freed even though they
+ were only conditionally allocated.  This could cause "munmap_chunk(): invalid
+ pointer" errors.  We fix this by keeping track of whether they have been
+ allocated and only freeing if they have.
+Author: Doug Torrance <dtorrance@piedmont.edu>
+Author: Jeremy Sowden <jeremy@azazel.net>
+Last-Update: 2020-05-14
+
+--- a/wmclockmon-config/actions.c
++++ b/wmclockmon-config/actions.c
+@@ -19,11 +19,15 @@
+ #include "edit.h"
+ #include "actions.h"
+ 
++extern int free_light_color;
++extern int free_command;
+ 
+ void quit_app() {
+-    FREE(command);
++    if (free_command)
++        FREE(command);
+     FREE(config_file);
+-    FREE(light_color);
++    if (free_light_color)
++	FREE(light_color);
+     free_alrm(&alarms);
+     gtk_main_quit();
+ }
+@@ -76,6 +80,14 @@
+ 
+ 
+ void save_datas() {
++    if (free_command) {
++        FREE(command);
++        free_command = 0;
++    }
++    if (free_light_color) {
++        FREE(light_color);
++        free_light_color = 0;
++    }
+     style_dir         = gtk_entry_get_text(GTK_ENTRY(wid_styledir));
+     style_name        = gtk_entry_get_text(GTK_ENTRY(wid_stylename));
+     light_color       = gtk_entry_get_text(GTK_ENTRY(wid_color));
+--- a/wmclockmon-config/tools.c
++++ b/wmclockmon-config/tools.c
+@@ -17,6 +17,8 @@
+ #include <sys/types.h>
+ #include "configfile.h"
+ 
++int    free_light_color;
++int    free_command;
+ 
+ int fexist(const char *filename) {
+     FILE *file;
+@@ -139,6 +141,7 @@
+             printf("Unable to open configuration file \"%s\".\n", config_file);
+         return;
+     }
++    free_light_color = free_command = 0;
+     while (! feof(file)) {
+         memset(line, 0, MAXSTRLEN + 1);
+         fgets(line, MAXSTRLEN, file);
+@@ -151,13 +154,15 @@
+ 
+         if (strncmp(line, "Backlight", 9) == 0)
+             backlight = getbool(value);
+-        else if (strncmp(line, "Color", 5) == 0)
++        else if (strncmp(line, "Color", 5) == 0) {
+             light_color = xstrdup(value);
+-        else if (strncmp(line, "Alarm", 5) == 0)
++            free_light_color = 1;
++        } else if (strncmp(line, "Alarm", 5) == 0)
+             alrm_add(&alarms, value);
+-        else if (strncmp(line, "Command", 7) == 0)
++        else if (strncmp(line, "Command", 7) == 0) {
+             command = xstrdup(value);
+-        else if (strncmp(line, "MessageCmd", 10) == 0)
++            free_command = 1;
++        } else if (strncmp(line, "MessageCmd", 10) == 0)
+             msgcmd = xstrdup(value);
+         else if (strncmp(line, "Blink", 5) == 0)
+             switch_authorized = getbool(value);
+--- a/wmclockmon-config/variables.h
++++ b/wmclockmon-config/variables.h
+@@ -22,5 +22,7 @@
+ char  *command;
+ char  *msgcmd;
+ Alarm *alarms;
++int    free_light_color;
++int    free_command;
+ 
+ #endif

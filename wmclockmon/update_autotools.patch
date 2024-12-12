@@ -1,0 +1,42 @@
+Description: Update autotools files to work with dh_autoreconf.
+ Prior to version 0.8.1-3, many of the patches were applied directly to
+ the various Makefile.in's.  Now with dh_autoreconf, these would be
+ overwritten.
+ .
+ In particular, we define the DATADIR macro and make sure that the auxiliary
+ programs wmclockmon-cal and wmclockmon-config are built properly.
+Author: Doug Torrance <dtorrance@piedmont.edu>
+Last-Update: 2016-01-28
+
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -15,6 +15,8 @@
+ 
+ CPPFLAGS = @CPPFLAGS@ @DFLAGS@
+ 
++AM_CPPFLAGS = -DDATADIR="\"$(pkgdatadir)\""
++
+ INCLUDES = @HEADER_SEARCH_PATH@
+ 
+ wmclockmon_LDADD = @LIBRARY_SEARCH_PATH@ @XLIBS@
+--- a/wmclockmon-cal/Makefile.am
++++ b/wmclockmon-cal/Makefile.am
+@@ -1,6 +1,6 @@
+ bin_PROGRAMS = wmclockmon-cal
+ 
+-wmclockmon_SOURCES =   \
++wmclockmon_cal_SOURCES =   \
+ 	defines.h \
+ 	main.c \
+ 	main.h \
+--- a/wmclockmon-config/Makefile.am
++++ b/wmclockmon-config/Makefile.am
+@@ -1,6 +1,6 @@
+-bin_PROGRAMS = wmclockmon
++bin_PROGRAMS = wmclockmon-config
+ 
+-wmclockmon_SOURCES =   \
++wmclockmon_config_SOURCES =   \
+ 	actions.c \
+ 	actions.h \
+ 	configfile.h \
