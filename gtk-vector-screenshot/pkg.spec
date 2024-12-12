@@ -9,7 +9,9 @@ URL: https://github.com/nomeata/gtk-vector-screenshot
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/nomeata/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
 
-Release: 1.20230220git.%shortcommit0%{?dist}
+patch1: destroy.patch
+
+Release: 1.20241211git.%shortcommit0%{?dist}
 
 BuildRequires: gtk3-devel
 
@@ -20,6 +22,7 @@ supports rendering the application to PDF, SVG and PostScript.
 
 %prep
 %setup -q -n %name-%commit0
+%patch -P 1 -p0 -b .orig
 
 %build
 libtoolize

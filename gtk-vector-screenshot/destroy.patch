@@ -1,0 +1,24 @@
+--- take-vector-screenshot.c.orig	2024-12-11 21:32:19.564469663 +0200
++++ take-vector-screenshot.c	2024-12-11 21:44:39.361026513 +0200
+@@ -140,13 +140,15 @@
+         "a vector screenshot of it.");
+ 
+     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
++    g_signal_connect(window, "destroy", gtk_main_quit, NULL);
++
+     gtk_window_set_icon_name(GTK_WINDOW(window),"camera");
+     gtk_window_set_title(GTK_WINDOW(window),"Vector screenshot taker");
+     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+     gtk_window_set_keep_above(GTK_WINDOW(window),TRUE);
+     gtk_container_add(GTK_CONTAINER(window), button);
+     gtk_widget_show_all(GTK_WIDGET(window));
+-    main_window = window;
++    main_window = GTK_WINDOW(window);
+ 
+     // Create a dummy window for the pointer grab
+     // (maybe try to remove this later)
+@@ -177,4 +179,3 @@
+ 
+     return 0;
+ }
+-
