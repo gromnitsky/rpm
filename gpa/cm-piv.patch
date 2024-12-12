@@ -1,0 +1,11 @@
+--- src/cm-piv.c.orig	2024-12-12 17:12:38.563906580 +0200
++++ src/cm-piv.c	2024-12-12 17:12:50.033059138 +0200
+@@ -44,7 +44,7 @@
+ 
+ #include "cm-object.h"
+ #include "cm-piv.h"
+-
++#include "keytable.h"
+ 
+ 
+ 
