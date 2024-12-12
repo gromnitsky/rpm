@@ -1,7 +1,7 @@
 Summary: A Swiss Army knife of video game emulators
 Name: ucon64
 Version: 0
-%global rev 2916
+%global rev 2933
 Release: 1.20231121svn.%rev%{?dist}
 License: GPLv2+
 URL: https://ucon64.sourceforge.net
