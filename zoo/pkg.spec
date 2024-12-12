@@ -26,21 +26,21 @@ the comp.sources.misc.
 
 %prep
 %setup -c
-%patch01 -p1 -b.orig
-%patch02 -p1 -b.orig
-%patch03 -p1 -b.orig
-%patch04 -p1 -b.orig
-%patch05 -p1 -b.orig
-%patch06 -p1 -b.orig
-%patch07 -p1 -b.orig
-%patch08 -p1 -b.orig
-%patch10 -p1 -b.orig
-%patch12 -p1 -b.orig
-%patch14 -p1 -b.orig
+%patch -P 01 -p1 -b.orig
+%patch -P 02 -p1 -b.orig
+%patch -P 03 -p1 -b.orig
+%patch -P 04 -p1 -b.orig
+%patch -P 05 -p1 -b.orig
+%patch -P 06 -p1 -b.orig
+%patch -P 07 -p1 -b.orig
+%patch -P 08 -p1 -b.orig
+%patch -P 10 -p1 -b.orig
+%patch -P 12 -p1 -b.orig
+%patch -P 14 -p1 -b.orig
 
 %build
 unset LDFLAGS
-%make_build linux
+%make_build linux OPTIM='-O -Wno-implicit-int'
 
 %install
 install -D fiz -t $RPM_BUILD_ROOT/%_bindir
