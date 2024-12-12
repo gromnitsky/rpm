@@ -5,10 +5,10 @@ License: BSD
 URL: http://www.lunabase.org/~faber/Vault/software/%{name}/
 
 # git ls-remote https://github.com/snorerot13/grap HEAD
-%global commit0 814f2b4083130109b0183ab4f1fcc3270c4efb86
+%global commit0 4cddf5801e9f83840a2c6cad425aefcdb9009aac
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/snorerot13/grap/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20231118git.%shortcommit0%{?dist}
+Release: 1.20241212git.%shortcommit0%{?dist}
 
 BuildRequires: bison, flex
 
