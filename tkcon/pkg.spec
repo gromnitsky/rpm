@@ -1,5 +1,5 @@
-%{!?tcl_version: %global tcl_version %(echo 'puts $tcl_version' | tclsh)}
-%{!?tcl_sitelib: %global tcl_sitelib %{_datadir}/tcl%{tcl_version}}
+%global tcl_version 8.6
+%global tcl_sitelib %{_datadir}/tcl%{tcl_version}
 
 Summary: Tcl GUI console
 Name: tkcon
@@ -11,11 +11,13 @@ URL: http://tkcon.sourceforge.net/
 # $ tar cfz tkcon-`date +%F-%s`.tar.gz tkcon && rm -rf tkcon
 Source0: %{name}-2017-08-19-1503123300.tar.gz
 
+patch1: wish.patch
+
 Release: 2.20170819cvs.1503123300%{?dist}
 
 BuildArch: noarch
 BuildRequires: desktop-file-utils, tcllib
-Requires: tk, perl-Tk
+Requires: tk8, perl-Tk
 
 %description
 tkcon is a replacement for the standard Tk console with many more features.
@@ -26,6 +28,7 @@ in the Mac and Windows Tk.
 
 %prep
 %setup -q -n %{name}
+%patch -P 1 -p0 -b .wish
 mkdir man
 mv docs/*.man man
 

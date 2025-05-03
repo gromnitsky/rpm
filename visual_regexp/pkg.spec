@@ -12,7 +12,7 @@ Source2: tkregexp.svg
 patch1: font.patch
 
 BuildArch: noarch
-Requires: tk, tcl-tclvfs
+Requires: tk8, tcl-tclvfs
 BuildRequires: dos2unix
 
 %description

@@ -1,7 +1,7 @@
 --- visual_regexp-3.1.tcl.font	2023-11-19 06:30:24.458841002 +0200
 +++ visual_regexp-3.1.tcl	2023-11-19 06:30:24.460840942 +0200
 @@ -1,7 +1,9 @@
-+#!/usr/bin/env wish
++#!/usr/bin/env wish8.6
 +#-*-tcl-*-
  package require starkit
  starkit::startup
