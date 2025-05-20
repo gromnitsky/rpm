@@ -8,10 +8,10 @@ License: GPLv2+
 Conflicts: fvwm fvwm2
 
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 d49736cb6c814450e967f814dac79c8e1819b8cd
+%global commit0 6370adf1cb3f3c1462bf7be123e1783df5ce08b3
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20250429git.%shortcommit0%{?dist}
+Release: 1.20250520git.%shortcommit0%{?dist}
 
 Source1: %name.desktop
 
@@ -19,8 +19,7 @@ patch1: 682.patch
 # copied from the orig fedora spec
 Patch2: fvwm-0002-Use-mimeopen-instead-of-EDITOR.patch
 
-# FIXME: uncomment this after upgrade to Fedora 41
-#BuildRequires: meson
+BuildRequires: meson
 BuildRequires: cjson-devel libevent-devel libX11-devel libXrandr-devel libXrender-devel libXt-devel xorg-x11-xtrans-devel
 
 # 'opt', but required also
