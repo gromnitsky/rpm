@@ -31,6 +31,13 @@ ifndef debug
 macros += -D 'debug_package %nil'
 endif
 
+# load user macros with %vendor, %distribution, &c
+user_macros := ../rpm-macros
+ifeq ($(wildcard $(user_macros)),$(user_macros))
+macros += --load $(user_macros)
+$(warning Loaded $(user_macros))
+endif
+
 SHELL := bash -o pipefail
 
 all: clean                      # rpm & srpm
