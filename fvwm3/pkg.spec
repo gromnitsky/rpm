@@ -2,16 +2,20 @@
 
 Name: fvwm3
 Version: 0
+Epoch: 1
+Release: 1
+
 Summary: An ICCCM-compliant multiple virtual desktop window manager
 URL: https://github.com/fvwmorg/fvwm3/
 License: GPLv2+
 Conflicts: fvwm fvwm2
 
+%global forgeurl0 https://github.com/fvwmorg/fvwm3
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 6370adf1cb3f3c1462bf7be123e1783df5ce08b3
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
-Release: 1.20250520git.%shortcommit0%{?dist}
+%global commit0 3abfb28bacf38d34feb3038a7ed6349e575ba5fa
+
+%forgemeta -a
+Source0: %{forgesource0}
 
 Source1: %name.desktop
 
@@ -37,19 +41,19 @@ Requires: xlockmore
 consumption, provide a 3D look to window frames, and a virtual desktop.
 
 %prep
-%setup -q -n %name-%commit0
-%patch -P 1 -p1 -b .emojis-in-font
-%patch -P 2 -p1 -b .mimeopen
+%forgesetup -a
 
 # undo '-Werror=format-security' from /usr/lib/rpm/redhat/macros
 %global _warning_options -Wall
 
 %build
-meson setup -Dmandoc=true -Dnls=disabled -Dgolang=enabled -Dprefix=/usr build
-ninja -C build
+%meson -Dmandoc=true -Dnls=disabled -Dgolang=enabled
+%meson_build
+
+%check
 
 %install
-DESTDIR=$RPM_BUILD_ROOT ninja -C build install
+%meson_install
 install -D -m0644 -p %SOURCE1 %buildroot/%_datadir/xsessions/%name.desktop
 
 %files
