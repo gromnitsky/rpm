@@ -6,11 +6,11 @@ URL: https://github.com/86Box/86Box
 
 %global forgeurl0 https://github.com/86Box/86Box
 # git ls-remote https://github.com/86Box/86Box master
-%global commit0 7d579fb3f994bfb98c186902803e5787aabe5761
+%global commit0 70f90b48471a9c6ad65a1e590c9319f0531892ca
 
 %global forgeurl1 https://github.com/86Box/roms
 # git ls-remote https://github.com/86Box/roms master
-%global commit1 2f32824f0d116f74ac4b553492d2689b305e6220
+%global commit1 f2b2daa0f445b767a22bdf4584e274f327f98ccd
 
 %forgemeta -a
 Source0: %{forgesource0}
@@ -44,5 +44,6 @@ mkdir -p %buildroot/%_datadir/86Box/roms
 cp -r . %buildroot/%_datadir/86Box/roms
 
 %files
+%caps(cap_net_raw+ep) %{_bindir}/86Box
 %_bindir/*
 %_datadir/*
