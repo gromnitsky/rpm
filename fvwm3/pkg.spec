@@ -3,23 +3,21 @@
 Name: fvwm3
 Version: 0
 Epoch: 1
-Release: 1
 
 Summary: An ICCCM-compliant multiple virtual desktop window manager
 URL: https://github.com/fvwmorg/fvwm3/
 License: GPLv2+
 Conflicts: fvwm fvwm2
 
-%global forgeurl0 https://github.com/fvwmorg/fvwm3
 # git ls-remote https://github.com/fvwmorg/fvwm3 HEAD
-%global commit0 3abfb28bacf38d34feb3038a7ed6349e575ba5fa
-
-%forgemeta -a
-Source0: %{forgesource0}
+%global commit0 adb1898ab6b29ab3bc8302e84e65a4326afa2711
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+Source0: https://github.com/fvwmorg/%name/archive/%commit0.tar.gz#/%name-%shortcommit0.tar.gz
+Release: 1.20260810git.%{shortcommit0}%{?dist}
 
 Source1: %name.desktop
 
-patch1: 682.patch
+Patch1: 682.patch
 # copied from the orig fedora spec
 Patch2: fvwm-0002-Use-mimeopen-instead-of-EDITOR.patch
 
@@ -41,7 +39,9 @@ Requires: xlockmore
 consumption, provide a 3D look to window frames, and a virtual desktop.
 
 %prep
-%forgesetup -a
+%setup -q -n %name-%commit0
+%patch -P 1 -p1 -b .emojis-in-font
+%patch -P 2 -p1 -b .mimeopen
 
 # undo '-Werror=format-security' from /usr/lib/rpm/redhat/macros
 %global _warning_options -Wall
